@@ -1,0 +1,484 @@
+<mxfile host="Electron">
+  <diagram id="erd" name="Chen ERD">
+    <mxGraphModel dx="4686" dy="1886" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e_Allergy" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Allergy" vertex="1">
+          <mxGeometry height="44" width="140" x="101" y="1618" as="geometry" />
+        </mxCell>
+        <mxCell id="e_DoctorNote" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Doctor Note" vertex="1">
+          <mxGeometry height="44" width="140" x="1433" y="1768" as="geometry" />
+        </mxCell>
+        <mxCell id="e_PatientTreatmentHistory" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Patient Treatment History" vertex="1">
+          <mxGeometry height="44" width="140" x="1083" y="1623" as="geometry" />
+        </mxCell>
+        <mxCell id="e_AITriageResult" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="AITriage Result" vertex="1">
+          <mxGeometry height="44" width="140" x="2019" y="459" as="geometry" />
+        </mxCell>
+        <mxCell id="e_MedicalProfile" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Medical Profile" vertex="1">
+          <mxGeometry height="44" width="140" x="307" y="1918" as="geometry" />
+        </mxCell>
+        <mxCell id="e_Ambulance" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Ambulance" vertex="1">
+          <mxGeometry height="44" width="140" x="2299" y="1281" as="geometry" />
+        </mxCell>
+        <mxCell id="e_EmergencyType" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Emergency Type" vertex="1">
+          <mxGeometry height="44" width="140" x="1695" y="295" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ChronicDisease" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Chronic Disease" vertex="1">
+          <mxGeometry height="44" width="140" x="551" y="2093" as="geometry" />
+        </mxCell>
+        <mxCell id="e_AppUser" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="App User" vertex="1">
+          <mxGeometry height="44" width="140" x="883" y="933" as="geometry" />
+        </mxCell>
+        <mxCell id="e_AmbulanceStatusHistory" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Ambulance Status History" vertex="1">
+          <mxGeometry height="44" width="140" x="2973" y="1349" as="geometry" />
+        </mxCell>
+        <mxCell id="e_Department" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Department" vertex="1">
+          <mxGeometry height="44" width="140" x="2231" y="923" as="geometry" />
+        </mxCell>
+        <mxCell id="e_EmergencyReviewDecision" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Emergency Review Decision" vertex="1">
+          <mxGeometry height="44" width="140" x="1300" y="365" as="geometry" />
+        </mxCell>
+        <mxCell id="e_Medication" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Medication" vertex="1">
+          <mxGeometry height="44" width="140" x="250" y="1045" as="geometry" />
+        </mxCell>
+        <mxCell id="e_Hospital" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Hospital" vertex="1">
+          <mxGeometry height="44" width="140" x="2110" y="1464" as="geometry" />
+        </mxCell>
+        <mxCell id="e_EmergencyContact" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Emergency Contact" vertex="1">
+          <mxGeometry height="44" width="140" x="-120" y="1139" as="geometry" />
+        </mxCell>
+        <mxCell id="e_HospitalCaseAssessment" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Hospital Case Assessment" vertex="1">
+          <mxGeometry height="44" width="140" x="1858" y="1804" as="geometry" />
+        </mxCell>
+        <mxCell id="e_Patient" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Patient" vertex="1">
+          <mxGeometry height="44" width="140" x="698" y="1360" as="geometry" />
+        </mxCell>
+        <mxCell id="e_CaseStatusHistory" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Case Status History" vertex="1">
+          <mxGeometry height="44" width="140" x="1173" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="e_AmbulanceLocationHistory" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Ambulance Location History" vertex="1">
+          <mxGeometry height="44" width="140" x="1981" y="1600" as="geometry" />
+        </mxCell>
+        <mxCell id="e_Notification" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Notification" vertex="1">
+          <mxGeometry height="44" width="140" x="1050" y="584" as="geometry" />
+        </mxCell>
+        <mxCell id="e_EmergencyRequest" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Emergency Request" vertex="1">
+          <mxGeometry height="44" width="140" x="1495" y="1069" as="geometry" />
+        </mxCell>
+        <mxCell id="e_HospitalBed" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Hospital Bed" vertex="1">
+          <mxGeometry height="44" width="140" x="2789" y="572" as="geometry" />
+        </mxCell>
+        <mxCell id="e_Doctor" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Doctor" vertex="1">
+          <mxGeometry height="44" width="140" x="1516" y="1598" as="geometry" />
+        </mxCell>
+        <mxCell id="r0" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Is Account Of" vertex="1">
+          <mxGeometry height="60" width="110" x="660" y="1072" as="geometry" />
+        </mxCell>
+        <mxCell id="c0_0" edge="1" parent="1" source="e_AppUser" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r0" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c0_1" edge="1" parent="1" source="e_Patient" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r0" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Has Profile" vertex="1">
+          <mxGeometry height="60" width="110" x="522" y="1617" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_0" edge="1" parent="1" source="e_Patient" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r1" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_1" edge="1" parent="1" source="e_MedicalProfile" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r1" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r2" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Registers" vertex="1">
+          <mxGeometry height="60" width="110" x="241" y="1265" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_0" edge="1" parent="1" source="e_Patient" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r2" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_1" edge="1" parent="1" source="e_EmergencyContact" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r2" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r3" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Diagnosed With" vertex="1">
+          <mxGeometry height="60" width="110" x="671" y="1744" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_0" edge="1" parent="1" source="e_Patient" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r3" value="M">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_1" edge="1" parent="1" source="e_ChronicDisease" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r3" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r4" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Has Allergy" vertex="1">
+          <mxGeometry height="60" width="110" x="425" y="1464" as="geometry" />
+        </mxCell>
+        <mxCell id="c4_0" edge="1" parent="1" source="e_Patient" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r4" value="M">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c4_1" edge="1" parent="1" source="e_Allergy" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r4" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r5" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Takes" vertex="1">
+          <mxGeometry height="60" width="110" x="490" y="1183" as="geometry" />
+        </mxCell>
+        <mxCell id="c5_0" edge="1" parent="1" source="e_Patient" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r5" value="M">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c5_1" edge="1" parent="1" source="e_Medication" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r5" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r6" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Reports" vertex="1">
+          <mxGeometry height="60" width="110" x="1132" y="1148" as="geometry" />
+        </mxCell>
+        <mxCell id="c6_0" edge="1" parent="1" source="e_Patient" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r6" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c6_1" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r6" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r7" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Classified As" vertex="1">
+          <mxGeometry height="60" width="110" x="1661" y="647" as="geometry" />
+        </mxCell>
+        <mxCell id="c7_0" edge="1" parent="1" source="e_EmergencyType" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r7" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c7_1" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r7" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r8" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Triaged By AI" vertex="1">
+          <mxGeometry height="60" width="110" x="1837" y="774" as="geometry" />
+        </mxCell>
+        <mxCell id="c8_0" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r8" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c8_1" edge="1" parent="1" source="e_AITriageResult" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r8" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r9" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Suggested Type" vertex="1">
+          <mxGeometry height="60" width="110" x="1867" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="c9_0" edge="1" parent="1" source="e_EmergencyType" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r9" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c9_1" edge="1" parent="1" source="e_AITriageResult" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r9" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r10" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Suggested Dept" vertex="1">
+          <mxGeometry height="60" width="110" x="2182" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="c10_0" edge="1" parent="1" source="e_Department" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r10" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c10_1" edge="1" parent="1" source="e_AITriageResult" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r10" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r11" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Reviewed In" vertex="1">
+          <mxGeometry height="60" width="110" x="1463" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="c11_0" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r11" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c11_1" edge="1" parent="1" source="e_EmergencyReviewDecision" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r11" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r12" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Confirmed Type" vertex="1">
+          <mxGeometry height="60" width="110" x="1510" y="295" as="geometry" />
+        </mxCell>
+        <mxCell id="c12_0" edge="1" parent="1" source="e_EmergencyType" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r12" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c12_1" edge="1" parent="1" source="e_EmergencyReviewDecision" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r12" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r13" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Made By Operator" vertex="1">
+          <mxGeometry height="60" width="110" x="898" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="c13_0" edge="1" parent="1" source="e_AppUser" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r13" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c13_1" edge="1" parent="1" source="e_EmergencyReviewDecision" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r13" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r14" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Closed By" vertex="1">
+          <mxGeometry height="60" width="110" x="1132" y="1018" as="geometry" />
+        </mxCell>
+        <mxCell id="c14_0" edge="1" parent="1" source="e_AppUser" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r14" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c14_1" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r14" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r15" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Has Status History" vertex="1">
+          <mxGeometry height="60" width="110" x="1399" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="c15_0" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r15" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c15_1" edge="1" parent="1" source="e_CaseStatusHistory" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r15" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r16" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Changed By" vertex="1">
+          <mxGeometry height="60" width="110" x="740" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="c16_0" edge="1" parent="1" source="e_AppUser" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r16" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c16_1" edge="1" parent="1" source="e_CaseStatusHistory" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r16" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r17" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Contains" vertex="1">
+          <mxGeometry height="60" width="110" x="2462" y="1096" as="geometry" />
+        </mxCell>
+        <mxCell id="c17_0" edge="1" parent="1" source="e_Hospital" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r17" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c17_1" edge="1" parent="1" source="e_Department" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r17" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r18" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Employs" vertex="1">
+          <mxGeometry height="60" width="110" x="1947" y="1360" as="geometry" />
+        </mxCell>
+        <mxCell id="c18_0" edge="1" parent="1" source="e_Department" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r18" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c18_1" edge="1" parent="1" source="e_Doctor" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r18" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r19" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Has Beds" vertex="1">
+          <mxGeometry height="60" width="110" x="2539" y="748" as="geometry" />
+        </mxCell>
+        <mxCell id="c19_0" edge="1" parent="1" source="e_Department" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r19" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c19_1" edge="1" parent="1" source="e_HospitalBed" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r19" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r20" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Is Account Of" vertex="1">
+          <mxGeometry height="60" width="110" x="1073" y="1314" as="geometry" />
+        </mxCell>
+        <mxCell id="c20_0" edge="1" parent="1" source="e_AppUser" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r20" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c20_1" edge="1" parent="1" source="e_Doctor" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r20" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r21" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Assigned To Hospital" vertex="1">
+          <mxGeometry height="60" width="110" x="1876" y="1157" as="geometry" />
+        </mxCell>
+        <mxCell id="c21_0" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r21" value="M">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c21_1" edge="1" parent="1" source="e_Hospital" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r21" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r22" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Routed To Dept" vertex="1">
+          <mxGeometry height="60" width="110" x="1904" y="902" as="geometry" />
+        </mxCell>
+        <mxCell id="c22_0" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r22" value="M">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c22_1" edge="1" parent="1" source="e_Department" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r22" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r23" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Assigned Doctor" vertex="1">
+          <mxGeometry height="60" width="110" x="1515" y="1281" as="geometry" />
+        </mxCell>
+        <mxCell id="c23_0" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r23" value="M">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c23_1" edge="1" parent="1" source="e_Doctor" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r23" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r24" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Assessed Case" vertex="1">
+          <mxGeometry height="60" width="110" x="1681" y="1412" as="geometry" />
+        </mxCell>
+        <mxCell id="c24_0" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r24" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c24_1" edge="1" parent="1" source="e_HospitalCaseAssessment" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r24" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r25" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="At Hospital" vertex="1">
+          <mxGeometry height="60" width="110" x="2156" y="1804" as="geometry" />
+        </mxCell>
+        <mxCell id="c25_0" edge="1" parent="1" source="e_Hospital" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r25" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c25_1" edge="1" parent="1" source="e_HospitalCaseAssessment" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r25" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r26" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="By Doctor" vertex="1">
+          <mxGeometry height="60" width="110" x="1661" y="1708" as="geometry" />
+        </mxCell>
+        <mxCell id="c26_0" edge="1" parent="1" source="e_Doctor" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r26" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c26_1" edge="1" parent="1" source="e_HospitalCaseAssessment" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r26" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r27" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Owns" vertex="1">
+          <mxGeometry height="60" width="110" x="2261" y="1404" as="geometry" />
+        </mxCell>
+        <mxCell id="c27_0" edge="1" parent="1" source="e_Hospital" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r27" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c27_1" edge="1" parent="1" source="e_Ambulance" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r27" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r28" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Dispatched To" vertex="1">
+          <mxGeometry height="60" width="110" x="2027" y="1029" as="geometry" />
+        </mxCell>
+        <mxCell id="c28_0" edge="1" parent="1" source="e_Ambulance" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r28" value="M">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c28_1" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r28" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r29" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Has Status Log" vertex="1">
+          <mxGeometry height="60" width="110" x="2690" y="1236" as="geometry" />
+        </mxCell>
+        <mxCell id="c29_0" edge="1" parent="1" source="e_Ambulance" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r29" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c29_1" edge="1" parent="1" source="e_AmbulanceStatusHistory" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r29" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r30" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Emits GPS" vertex="1">
+          <mxGeometry height="60" width="110" x="2429" y="1590" as="geometry" />
+        </mxCell>
+        <mxCell id="c30_0" edge="1" parent="1" source="e_Ambulance" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r30" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c30_1" edge="1" parent="1" source="e_AmbulanceLocationHistory" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r30" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r31" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Recorded For" vertex="1">
+          <mxGeometry height="60" width="110" x="1748" y="1285" as="geometry" />
+        </mxCell>
+        <mxCell id="c31_0" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r31" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c31_1" edge="1" parent="1" source="e_AmbulanceLocationHistory" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r31" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r32" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Has Note" vertex="1">
+          <mxGeometry height="60" width="110" x="1379" y="1404" as="geometry" />
+        </mxCell>
+        <mxCell id="c32_0" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r32" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c32_1" edge="1" parent="1" source="e_DoctorNote" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r32" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r33" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Written By" vertex="1">
+          <mxGeometry height="60" width="110" x="1515" y="1967" as="geometry" />
+        </mxCell>
+        <mxCell id="c33_0" edge="1" parent="1" source="e_Doctor" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r33" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c33_1" edge="1" parent="1" source="e_DoctorNote" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r33" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r34" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Has Treatment" vertex="1">
+          <mxGeometry height="60" width="110" x="1271" y="1257" as="geometry" />
+        </mxCell>
+        <mxCell id="c34_0" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r34" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c34_1" edge="1" parent="1" source="e_PatientTreatmentHistory" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r34" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r35" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Provided By" vertex="1">
+          <mxGeometry height="60" width="110" x="1228" y="1862" as="geometry" />
+        </mxCell>
+        <mxCell id="c35_0" edge="1" parent="1" source="e_Doctor" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r35" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c35_1" edge="1" parent="1" source="e_PatientTreatmentHistory" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r35" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r36" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Treats" vertex="1">
+          <mxGeometry height="60" width="110" x="893" y="1483" as="geometry" />
+        </mxCell>
+        <mxCell id="c36_0" edge="1" parent="1" source="e_Patient" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r36" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c36_1" edge="1" parent="1" source="e_PatientTreatmentHistory" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r36" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r37" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Triggers" vertex="1">
+          <mxGeometry height="60" width="110" x="1223" y="842" as="geometry" />
+        </mxCell>
+        <mxCell id="c37_0" edge="1" parent="1" source="e_EmergencyRequest" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r37" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c37_1" edge="1" parent="1" source="e_Notification" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r37" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r38" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Receives" vertex="1">
+          <mxGeometry height="60" width="110" x="1000" y="748" as="geometry" />
+        </mxCell>
+        <mxCell id="c38_0" edge="1" parent="1" source="e_AppUser" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r38" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c38_1" edge="1" parent="1" source="e_Notification" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r38" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="e_Paramedic" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Paramedic" vertex="1">
+          <mxGeometry height="44" width="140" x="1820" y="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="e_HospitalStaff" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Hospital Staff" vertex="1">
+          <mxGeometry height="44" width="140" x="2460" y="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="r39" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Works At" vertex="1">
+          <mxGeometry height="60" width="110" x="2107" y="1323" as="geometry" />
+        </mxCell>
+        <mxCell id="c39_0" edge="1" parent="1" source="e_Hospital" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r39" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c39_1" edge="1" parent="1" source="e_Paramedic" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r39" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r40" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Works At" vertex="1">
+          <mxGeometry height="60" width="110" x="2295" y="1138" as="geometry" />
+        </mxCell>
+        <mxCell id="c40_0" edge="1" parent="1" source="e_Hospital" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r40" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c40_1" edge="1" parent="1" source="e_HospitalStaff" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r40" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r41" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Is Account Of" vertex="1">
+          <mxGeometry height="60" width="110" x="1299" y="985" as="geometry" />
+        </mxCell>
+        <mxCell id="c41_0" edge="1" parent="1" source="e_AppUser" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r41" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c41_1" edge="1" parent="1" source="e_Paramedic" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r41" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r42" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Is Account Of" vertex="1">
+          <mxGeometry height="60" width="110" x="1053" y="898" as="geometry" />
+        </mxCell>
+        <mxCell id="c42_0" edge="1" parent="1" source="e_AppUser" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r42" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c42_1" edge="1" parent="1" source="e_HospitalStaff" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;shape=link;width=4;" target="r42" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c28_2" edge="1" parent="1" source="e_Paramedic" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r28" value="M">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="r43" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontSize=10;" value="Sent To" vertex="1">
+          <mxGeometry height="60" width="110" x="420" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="c43_0" edge="1" parent="1" source="e_EmergencyContact" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r43" value="1">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+        <mxCell id="c43_1" edge="1" parent="1" source="e_Notification" style="endArrow=none;html=1;strokeColor=#000000;fontColor=#000000;labelBackgroundColor=#FFFFFF;fontStyle=1;fontSize=13;strokeWidth=1.5;" target="r43" value="N">
+          <mxGeometry relative="1" x="-0.6" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
