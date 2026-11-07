@@ -8,10 +8,18 @@ namespace SmartEmergency.Domain.Entities
     {
         public int PatientId { get; set; }
         public string UserId { get; set; } = default!;
-        public DateOnly DateOfBirth { get; set; }
+        public DateOnly? DateOfBirth { get; set; }
         public string? Gender { get; set; }
         public string? Address { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public MedicalProfile MedicalProfile { get; set; } = default!; //Navigation property
+
+        public ICollection<EmergencyContact> EmergencyContacts { get; set; }
+        = new List<EmergencyContact>();
+
+        public ICollection<PatientChronicDisease> PatientChronicDiseases { get; set; }
+        = new List<PatientChronicDisease>();
 
     }
 }
