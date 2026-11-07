@@ -1,0 +1,15 @@
+
+# Visual Studio
+.vs/
+**/.vs/
+*.user
+*.suo
+
+# Build files
+bin/
+obj/
+**/bin/
+**/obj/
+
+# Sensitive settings
+appsettings.Development.json
