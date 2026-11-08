@@ -3,4 +3,5 @@
   <Project Path="SmartEmergency.Application/SmartEmergency.Application.csproj" />
   <Project Path="SmartEmergency.Domain/SmartEmergency.Domain.csproj" />
   <Project Path="SmartEmergency.Infrastructure/SmartEmergency.Infrastructure.csproj" />
+  <Project Path="SmartEmergency.Web/SmartEmergency.Web.csproj" Id="9a6fbbd0-4b8a-4329-9979-073ba3055cbb" />
 </Solution>
