@@ -8,7 +8,7 @@ namespace SmartEmergency.Domain.Entities
     {
         public int DoctorId { get; set; }
         public string UserId { get; set; } = default!;
-        public string DepartmentId { get; set; } = default!;
+        public int DepartmentId { get; set; } = default!;
         public string FullName { get; set; } = default!;
         public string? Specialization { get; set; }
         public string? PhoneNumber { get; set; }

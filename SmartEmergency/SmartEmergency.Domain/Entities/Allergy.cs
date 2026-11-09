@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SmartEmergency.Domain.Entities
 {
-    public class Allergie
+    public class Allergy
     {
         public int AllergyId { get; set; }
         public string Name { get; set; } = default!;
@@ -12,7 +12,7 @@ namespace SmartEmergency.Domain.Entities
 
         //Navigation Property
 
-        public ICollection<PatientAllergie> PatientAllergies { get; set; }
-        = new List<PatientAllergie>();
+        public ICollection<PatientAllergy> PatientAllergies { get; set; }
+        = new List<PatientAllergy>();
     }
 }

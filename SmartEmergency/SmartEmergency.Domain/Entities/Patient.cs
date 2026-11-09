@@ -26,7 +26,7 @@ namespace SmartEmergency.Domain.Entities
         = new List<EmergencyRequest>();
         public ICollection<PatientTreatmentHistory> PatientTreatmentHistories { get; set; }
         = new List<PatientTreatmentHistory>();
-        public ICollection<PatientAllergie> PatientAllergies { get; set; }
-        = new List<PatientAllergie>();
+        public ICollection<PatientAllergy> PatientAllergies { get; set; }
+        = new List<PatientAllergy>();
     }
 }
