@@ -6,7 +6,7 @@ namespace SmartEmergency.Domain.Entities
 {
     public class AmbulanceAssignment
     {
-        public long AssignmentId { get; set; }
+        public long AmbulanceAssignmentId { get; set; }
         public long EmergencyRequestId { get; set; }
         public int AmbulanceId { get; set; }
         public int ParamedicId { get; set; }
@@ -17,5 +17,6 @@ namespace SmartEmergency.Domain.Entities
 
         public EmergencyRequest EmergencyRequest { get; set; } = default!;
         public Ambulance Ambulance { get; set; } = default!;
+        public Paramedic Paramedic { get; set; } = default!;
     }
 }

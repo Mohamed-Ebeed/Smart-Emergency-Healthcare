@@ -6,12 +6,12 @@ namespace SmartEmergency.Domain.Entities
 {
     public class EmergencyReviewDecision
     {
-        public long ReviewDecisionId { get; set; }
+        public long EmergencyReviewDecisionId { get; set; }
         public long EmergencyRequestId { get; set; }
         public string OperatorId { get; set; } = default!;
         public int? ConfirmedEmergencyTypeId { get; set; }
         public string? ConfirmedPriority { get; set; }
-        public string? Decision { get; set; }
+        public string Decision { get; set; } = default!;
         public string? Notes { get; set; }
         public DateTime ReviewedAt { get; set; }
 

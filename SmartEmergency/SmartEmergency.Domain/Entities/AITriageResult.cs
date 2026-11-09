@@ -20,6 +20,6 @@ namespace SmartEmergency.Domain.Entities
 
         public EmergencyType? SuggestedEmergencyType { get; set; }
 
-        
+        public Department? SuggestedDepartment { get; set; }
     }
 }

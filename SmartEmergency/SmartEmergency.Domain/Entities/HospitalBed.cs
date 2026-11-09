@@ -6,7 +6,7 @@ namespace SmartEmergency.Domain.Entities
 {
     public class HospitalBed
     {
-        public int BedId { get; set; }
+        public int HospitalBedId { get; set; }
         public int DepartmentId { get; set; }
         public string BedNumber { get; set; } = default!;
         public string BedStatus { get; set; } = default!;

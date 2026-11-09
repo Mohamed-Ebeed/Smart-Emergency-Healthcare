@@ -6,7 +6,7 @@ namespace SmartEmergency.Domain.Entities
 {
     public class AmbulanceLocationHistory
     {
-        public long LocationHistoryId { get; set; }
+        public long AmbulanceLocationHistoryId { get; set; }
         public int AmbulanceId { get; set; }
         public long? EmergencyRequestId { get; set; }
         public Decimal Latitude { get; set; }
