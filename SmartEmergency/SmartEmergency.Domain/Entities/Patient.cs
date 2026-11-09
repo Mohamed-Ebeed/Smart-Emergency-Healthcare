@@ -13,13 +13,20 @@ namespace SmartEmergency.Domain.Entities
         public string? Address { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public MedicalProfile MedicalProfile { get; set; } = default!; //Navigation property
+        public MedicalProfile? MedicalProfile { get; set; } = default!; //Navigation property
 
         public ICollection<EmergencyContact> EmergencyContacts { get; set; }
         = new List<EmergencyContact>();
 
         public ICollection<PatientChronicDisease> PatientChronicDiseases { get; set; }
         = new List<PatientChronicDisease>();
-
+        public ICollection<PatientMedication> PatientMedications { get; set; }
+        = new List<PatientMedication>();
+        public ICollection<EmergencyRequest> EmergencyRequests { get; set; }
+        = new List<EmergencyRequest>();
+        public ICollection<PatientTreatmentHistory> PatientTreatmentHistories { get; set; }
+        = new List<PatientTreatmentHistory>();
+        public ICollection<PatientAllergie> PatientAllergies { get; set; }
+        = new List<PatientAllergie>();
     }
 }

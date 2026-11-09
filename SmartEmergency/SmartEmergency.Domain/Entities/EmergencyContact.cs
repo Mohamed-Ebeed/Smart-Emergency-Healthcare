@@ -14,6 +14,6 @@ namespace SmartEmergency.Domain.Entities
         public bool IsPrimary { get; set; }
 
         public Patient Patient { get; set; } = default!; //Navigation property
-
+        public ICollection<Notification> Notifications { get; set; } = new List<Notification>(); 
     }
 }
