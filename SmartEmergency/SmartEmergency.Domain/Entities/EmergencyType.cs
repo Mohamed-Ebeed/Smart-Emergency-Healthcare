@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartEmergency.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,8 +10,7 @@ namespace SmartEmergency.Domain.Entities
         public int EmergencyTypeId { get; set; }
         public string Name { get; set; } = default!;
         public string? Description { get; set; }
-        public string? DefaultPriority { get; set; }
-
+        public Priority? DefaultPriority { get; set; }
         public ICollection<EmergencyRequest> EmergencyRequests { get; set; }
         = new List<EmergencyRequest>();
         public ICollection<AITriageResult> AITriageResults { get; set; }

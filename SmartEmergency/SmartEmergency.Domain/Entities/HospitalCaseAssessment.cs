@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using SmartEmergency.Domain.Enums;
 namespace SmartEmergency.Domain.Entities
 {
     public class HospitalCaseAssessment
@@ -10,7 +10,7 @@ namespace SmartEmergency.Domain.Entities
         public long EmergencyRequestId { get; set; }
         public int HospitalId { get; set; }
         public int AssessedByDoctorId { get; set; }
-        public string? AssessedPriority { get; set; }
+        public Priority? AssessedPriority { get; set; }
         public string? AssessmentNotes { get; set; }
         public DateTime AssessedAt { get; set; }
 

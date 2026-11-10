@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using SmartEmergency.Domain.Enums;
 namespace SmartEmergency.Domain.Entities
 {
     public class EmergencyHospitalAssignment
@@ -10,7 +10,7 @@ namespace SmartEmergency.Domain.Entities
         public long EmergencyRequestId { get; set; }
         public int HospitalId { get; set; }
         public string? AssignedByOperatorId { get; set; }
-        public string AssignmentStatus { get; set; } = default!;
+        public AssignmentStatus AssignmentStatus { get; set; } = default!;
         public DateTime AssignedAt { get; set; }
         public DateTime? RespondedAt { get; set; }
         public string? ResponseNotes { get; set; }

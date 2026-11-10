@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using SmartEmergency.Domain.Enums;
 namespace SmartEmergency.Domain.Entities
 {
     public class CaseDepartmentAssignment
@@ -11,7 +11,7 @@ namespace SmartEmergency.Domain.Entities
         public int DepartmentId { get; set; }
         public string? AssignedByUserId { get; set; }
         public DateTime AssignedAt { get; set; }
-        public string AssignmentStatus { get; set; } = default!;
+        public AssignmentStatus AssignmentStatus { get; set; } = default!;
 
         public Department Department { get; set; } = default!;
         public EmergencyRequest EmergencyRequest { get; set; } = default!;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using SmartEmergency.Domain.Enums;
 namespace SmartEmergency.Domain.Entities
 {
     public class EmergencyReviewDecision
@@ -10,7 +10,7 @@ namespace SmartEmergency.Domain.Entities
         public long EmergencyRequestId { get; set; }
         public string OperatorId { get; set; } = default!;
         public int? ConfirmedEmergencyTypeId { get; set; }
-        public string? ConfirmedPriority { get; set; }
+        public Priority? ConfirmedPriority { get; set; }
         public string Decision { get; set; } = default!;
         public string? Notes { get; set; }
         public DateTime ReviewedAt { get; set; }

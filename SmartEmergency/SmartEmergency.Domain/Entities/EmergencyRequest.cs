@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
+using SmartEmergency.Domain.Enums;
 
 namespace SmartEmergency.Domain.Entities
 {
@@ -14,8 +15,8 @@ namespace SmartEmergency.Domain.Entities
         public Decimal? Latitude { get; set; }
         public Decimal? Longitude { get; set; }
         public string? AddressText { get; set; }
-        public string? Priority { get; set; }
-        public string CurrentStatus { get; set; } = default!;
+        public Priority? Priority { get; set; }
+        public RequestStatus CurrentStatus { get; set; } = RequestStatus.Submitted;
         public DateTime CreatedAt { get; set; }
         public DateTime? PickedUpAt { get; set; }
         public DateTime? ArrivedAtHospitalAt { get; set; }

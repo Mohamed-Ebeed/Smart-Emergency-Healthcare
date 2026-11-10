@@ -11,7 +11,7 @@ namespace SmartEmergency.Domain.Entities
         public string? BloodType { get; set; }
         public string? PrimaryConditions { get; set; }
         public string? CurrentNotes { get; set; }
-        public DateTime LastUpdatedAt { get; set; }
+        public DateTime LastUpdatedAt { get; set; } = DateTime.UtcNow;
 
         public Patient Patient { get; set; } = default!; //Navigation property
     }

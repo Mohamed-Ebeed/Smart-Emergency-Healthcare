@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using SmartEmergency.Domain.Enums;
 namespace SmartEmergency.Domain.Entities
 {
     public class AITriageResult
@@ -9,7 +9,7 @@ namespace SmartEmergency.Domain.Entities
         public long AITriageResultId { get; set; }
         public long EmergencyRequestId { get; set; }
         public int? SuggestedEmergencyTypeId { get; set; }
-        public string? SuggestedPriority { get; set; }
+        public Priority? SuggestedPriority { get; set; }
         public int? SuggestedDepartmentId { get; set; }
         public decimal? ConfidenceScore { get; set; }
         public string? ReasoningSummary { get; set; }

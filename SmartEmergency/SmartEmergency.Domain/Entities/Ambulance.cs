@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using SmartEmergency.Domain.Enums;
 namespace SmartEmergency.Domain.Entities
 {
     public class Ambulance
@@ -9,7 +9,7 @@ namespace SmartEmergency.Domain.Entities
         public int AmbulanceId { get; set; }
         public int HospitalId { get; set; }
         public string VehicleNumber { get; set; } = default!;
-        public string AmbulanceStatus { get; set; } = default!;
+        public AmbulanceStatus AmbulanceStatus { get; set; } = default!;
         public Decimal? LastKnownLatitude { get; set; }
         public Decimal? LastKnownLongitude { get; set; }
 
