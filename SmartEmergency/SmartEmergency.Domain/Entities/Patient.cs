@@ -1,6 +1,6 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
-using System.Text;
+using SmartEmergency.Domain.Enums;
 
 namespace SmartEmergency.Domain.Entities
 {
@@ -9,11 +9,11 @@ namespace SmartEmergency.Domain.Entities
         public int PatientId { get; set; }
         public string UserId { get; set; } = default!;
         public DateOnly? DateOfBirth { get; set; }
-        public string? Gender { get; set; }
+        public Gender? Gender { get; set; }
         public string? Address { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public MedicalProfile? MedicalProfile { get; set; } = default!; //Navigation property
+        public MedicalProfile? MedicalProfile { get; set; } //Navigation property
 
         public ICollection<EmergencyContact> EmergencyContacts { get; set; }
         = new List<EmergencyContact>();
