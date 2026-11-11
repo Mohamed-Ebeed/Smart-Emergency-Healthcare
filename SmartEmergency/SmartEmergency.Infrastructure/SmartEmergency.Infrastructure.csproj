@@ -22,4 +22,9 @@
 		<ProjectReference Include="..\SmartEmergency.Domain\SmartEmergency.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Data\Configurations\" />
+	  <Folder Include="DependencyInjection\" />
+	</ItemGroup>
+
 </Project>

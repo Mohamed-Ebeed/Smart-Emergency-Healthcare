@@ -14,4 +14,20 @@
     <ProjectReference Include="..\SmartEmergency.Domain\SmartEmergency.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Auth\Interfaces\" />
+    <Folder Include="EmergencyRequests\DTOs\" />
+    <Folder Include="EmergencyRequests\Interfaces\" />
+    <Folder Include="EmergencyRequests\Services\" />
+    <Folder Include="Hospitals\DTOs\" />
+    <Folder Include="Hospitals\Interfaces\" />
+    <Folder Include="Hospitals\Services\" />
+    <Folder Include="Notifications\DTOs\" />
+    <Folder Include="Notifications\Interfaces\" />
+    <Folder Include="Notifications\Services\" />
+    <Folder Include="Patients\DTOs\" />
+    <Folder Include="Patients\Interfaces\" />
+    <Folder Include="Patients\Services\" />
+  </ItemGroup>
+
 </Project>
