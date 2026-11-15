@@ -8,6 +8,8 @@ namespace SmartEmergency.Application.Auth.Interfaces
 
         Task<AuthResultDto> LoginAsync(LoginDto dto);
 
+        Task LogoutAsync();
+
         Task<AuthResultDto> CreateUserAsync(CreateUserDto dto);
     }
 }

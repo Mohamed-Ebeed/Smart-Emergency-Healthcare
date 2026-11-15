@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SmartEmergency.Application.Auth.DTOs;
 using SmartEmergency.Application.Auth.Interfaces;
 using SmartEmergency.Domain.Common;
@@ -10,12 +12,20 @@ namespace SmartEmergency.Infrastructure.Identity
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<AuthService> _logger;
 
-        public AuthService(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        public AuthService(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            ApplicationDbContext context,
+            ILogger<AuthService> logger)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _context = context;
+            _logger = logger;
         }
 
         // Admin creates staff accounts
@@ -31,18 +41,38 @@ namespace SmartEmergency.Infrastructure.Identity
                 return result;
             }
 
-            // Paramedic and HospitalStaff must belong to a hospital
-            if ((dto.Role == Roles.Paramedic || dto.Role == Roles.HospitalStaff) && dto.HospitalId == null)
+            // Paramedic and HospitalStaff must belong to an existing hospital
+            if (dto.Role == Roles.Paramedic || dto.Role == Roles.HospitalStaff)
             {
-                result.Errors.Add("HospitalId is required for this role.");
-                return result;
+                if (dto.HospitalId == null)
+                {
+                    result.Errors.Add("HospitalId is required for this role.");
+                    return result;
+                }
+
+                var hospitalExists = await _context.Hospitals.AnyAsync(h => h.HospitalId == dto.HospitalId);
+                if (!hospitalExists)
+                {
+                    result.Errors.Add("Hospital not found.");
+                    return result;
+                }
             }
 
-            // Doctor must belong to a department
-            if (dto.Role == Roles.Doctor && dto.DepartmentId == null)
+            // Doctor must belong to an existing department
+            if (dto.Role == Roles.Doctor)
             {
-                result.Errors.Add("DepartmentId is required for doctors.");
-                return result;
+                if (dto.DepartmentId == null)
+                {
+                    result.Errors.Add("DepartmentId is required for doctors.");
+                    return result;
+                }
+
+                var departmentExists = await _context.Departments.AnyAsync(d => d.DepartmentId == dto.DepartmentId);
+                if (!departmentExists)
+                {
+                    result.Errors.Add("Department not found.");
+                    return result;
+                }
             }
 
             // Email must be unique
@@ -130,23 +160,31 @@ namespace SmartEmergency.Infrastructure.Identity
                 };
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Undo everything if any step fails
+                // Log the real error and undo everything
+                _logger.LogError(ex, "Error while creating user {Email} with role {Role}", dto.Email, dto.Role);
                 await transaction.RollbackAsync();
                 result.Errors.Add("Something went wrong while creating the account.");
                 return result;
             }
         }
 
-        // Login
+        // Login (creates auth cookie)
         public async Task<AuthResultDto> LoginAsync(LoginDto dto)
         {
             var result = new AuthResultDto();
 
             // Same message for wrong email or wrong password (security)
             var user = await _userManager.FindByEmailAsync(dto.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
+            if (user == null)
+            {
+                result.Errors.Add("Invalid email or password.");
+                return result;
+            }
+
+            var signInResult = await _signInManager.PasswordSignInAsync(user, dto.Password, isPersistent: false, lockoutOnFailure: false);
+            if (!signInResult.Succeeded)
             {
                 result.Errors.Add("Invalid email or password.");
                 return result;
@@ -165,6 +203,12 @@ namespace SmartEmergency.Infrastructure.Identity
                 Role = roles.FirstOrDefault() ?? string.Empty
             };
             return result;
+        }
+
+        // Logout (removes auth cookie)
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
         }
 
         // Patient self registration
@@ -235,9 +279,10 @@ namespace SmartEmergency.Infrastructure.Identity
                 };
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Undo everything if any step fails
+                // Log the real error and undo everything
+                _logger.LogError(ex, "Error while registering patient {Email}", dto.Email);
                 await transaction.RollbackAsync();
                 result.Errors.Add("Something went wrong while creating the account.");
                 return result;
