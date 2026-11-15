@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using SmartEmergency.Domain.Enums;
 namespace SmartEmergency.Domain.Entities
 {
     public class Notification
@@ -12,7 +12,7 @@ namespace SmartEmergency.Domain.Entities
         public long? EmergencyRequestId { get; set; }
         public string Title { get; set; } = default!;
         public string Message { get; set; } = default!;
-        public string Channel { get; set; } = default!;
+        public NotificationChannel Channel { get; set; } 
         public bool IsRead { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? SentAt { get; set; }
