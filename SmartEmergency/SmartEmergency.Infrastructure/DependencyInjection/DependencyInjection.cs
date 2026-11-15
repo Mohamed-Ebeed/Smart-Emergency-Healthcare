@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using SmartEmergency.Application.Common.Interfaces;
+using SmartEmergency.Application.Auth.Interfaces;
 using SmartEmergency.Infrastructure.Data;
 using SmartEmergency.Infrastructure.Identity;
 
@@ -30,9 +31,16 @@ namespace SmartEmergency.Infrastructure.DependencyInjection
 
             // ASP.NET Core Identity
             services
-                .AddIdentity<ApplicationUser, IdentityRole>()
+                .AddIdentity<ApplicationUser, IdentityRole>(options =>
+                {
+                    options.Password.RequiredLength = 8;
+                    options.User.RequireUniqueEmail = true;
+                })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            // Auth
+            services.AddScoped<IAuthService, AuthService>();
 
             return services;
         }
