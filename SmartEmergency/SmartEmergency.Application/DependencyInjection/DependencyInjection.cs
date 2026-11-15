@@ -1,5 +1,7 @@
 ﻿
 using Microsoft.Extensions.DependencyInjection;
+using SmartEmergency.Application.Patients.Interfaces;
+using SmartEmergency.Application.Patients.Services;
 
 namespace SmartEmergency.Application.DependencyInjection
 {
@@ -9,7 +11,8 @@ namespace SmartEmergency.Application.DependencyInjection
             this IServiceCollection services)
         {
             // Application services will be registered here.
-
+            services.AddScoped<IPatientService, PatientService>();
+            services.AddScoped<IMedicalProfileService, MedicalProfileService>();
             return services;
         }
     }
