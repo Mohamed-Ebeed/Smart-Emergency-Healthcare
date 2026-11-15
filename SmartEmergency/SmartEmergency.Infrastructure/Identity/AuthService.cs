@@ -183,7 +183,13 @@ namespace SmartEmergency.Infrastructure.Identity
                 return result;
             }
 
-            var signInResult = await _signInManager.PasswordSignInAsync(user, dto.Password, isPersistent: false, lockoutOnFailure: false);
+            var signInResult = await _signInManager.PasswordSignInAsync(user, dto.Password, isPersistent: false, lockoutOnFailure: true);
+
+            if (signInResult.IsLockedOut)
+            {
+                result.Errors.Add("Account is locked. Try again later.");
+                return result;
+            }
             if (!signInResult.Succeeded)
             {
                 result.Errors.Add("Invalid email or password.");

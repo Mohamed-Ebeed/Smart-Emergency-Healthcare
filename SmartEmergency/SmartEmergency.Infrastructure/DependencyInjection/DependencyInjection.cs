@@ -35,6 +35,7 @@ namespace SmartEmergency.Infrastructure.DependencyInjection
                 {
                     options.Password.RequiredLength = 8;
                     options.User.RequireUniqueEmail = true;
+                    options.Lockout.MaxFailedAccessAttempts = 4;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
