@@ -6,7 +6,7 @@ namespace SmartEmergency.Domain.Entities
 {
     public class PatientTreatmentHistory
     {
-        public long TreatmentHistoryId { get; set; }
+        public long PatientTreatmentHistoryId { get; set; }
         public long EmergencyRequestId { get; set; }
         public int PatientId { get; set; }
         public int? DoctorId { get; set; }
