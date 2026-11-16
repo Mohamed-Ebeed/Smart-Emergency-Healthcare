@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SmartEmergency.Application.Common.Interfaces;
+using SmartEmergency.Application.Notifications.Interfaces;
 using SmartEmergency.Application.EmergencyRequests.DTOs;
 using SmartEmergency.Application.EmergencyRequests.Interfaces;
 using SmartEmergency.Domain.Entities;
@@ -17,10 +18,13 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
     public class EmergencyRequestService : IEmergencyRequestService
     {
         private readonly IAppDbContext _db;
-
-        public EmergencyRequestService(IAppDbContext db)
+        private readonly INotificationService _notificationService;
+        public EmergencyRequestService(
+            IAppDbContext db,
+            INotificationService notificationService)
         {
             _db = db;
+            _notificationService = notificationService;
         }
 
         public async Task<EmergencyRequestDto> CreateAsync(CreateEmergencyRequestDto dto, CancellationToken cancellationToken = default)
@@ -63,6 +67,9 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
 
             _db.EmergencyRequests.Add(request);
             await _db.SaveChangesAsync(cancellationToken);
+            await _notificationService.NotifyEmergencyRequestSubmittedAsync(
+                request.EmergencyRequestId,
+                cancellationToken);
 
             return await GetByIdAsync(request.EmergencyRequestId, cancellationToken);
         }
@@ -92,29 +99,32 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
             return requests.Select(r => MapToDto(r)).ToList();
         }
 
-        public async Task<bool> ChangeStatusAsync(long requestId, RequestStatus newStatus, string userId)
+        public async Task<bool> ChangeStatusAsync(
+            long requestId,
+            RequestStatus newStatus,
+            string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
                 throw new ArgumentException("UserId is required.");
 
-            //1. check the request exists
             var request = await _db.EmergencyRequests
                 .FirstOrDefaultAsync(r => r.EmergencyRequestId == requestId);
+
             if (request == null)
                 return false;
 
-            //2. check the transition is allowed
             if (!RequestStatusTransitions.CanTransition(request.CurrentStatus, newStatus))
                 return false;
 
-            //3,4,5. update the status and add history record
             UpdateStatus(request, newStatus, userId, null);
 
-            //6. one save for both changes
             await _db.SaveChangesAsync();
+
+            await _notificationService.NotifyEmergencyRequestStatusChangedAsync(
+                requestId);
+
             return true;
         }
-
         public async Task CancelAsync(long requestId, string userId, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(userId))
@@ -138,6 +148,9 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
 
             UpdateStatus(request, RequestStatus.Cancelled, userId, "Cancelled by patient");
             await _db.SaveChangesAsync(cancellationToken);
+            await _notificationService.NotifyEmergencyRequestStatusChangedAsync(
+                requestId,
+                cancellationToken);
         }
 
         private void UpdateStatus(EmergencyRequest request, RequestStatus newStatus, string userId, string? notes)
