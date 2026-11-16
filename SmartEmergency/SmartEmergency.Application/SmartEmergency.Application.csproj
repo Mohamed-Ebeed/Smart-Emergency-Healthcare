@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Auth\Interfaces\" />
     <Folder Include="EmergencyRequests\DTOs\" />
     <Folder Include="EmergencyRequests\Interfaces\" />
     <Folder Include="EmergencyRequests\Services\" />
