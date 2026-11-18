@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using SmartEmergency.Domain.Enums;
+namespace SmartEmergency.Application.Notifications.DTOs
+{
+    public class CreateNotificationDto
+    {
+        public string? RecipientUserId { get; set; }
+        public int? EmergencyContactId { get; set; }
+        public long? EmergencyRequestId { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public NotificationChannel Channel { get; set; }
+    }
+}
