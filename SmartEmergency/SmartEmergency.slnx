@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="SmartEmergency.API/SmartEmergency.API.csproj" Id="b76db148-7885-4f28-bdeb-48e9429e0899" />
   <Project Path="SmartEmergency.Application/SmartEmergency.Application.csproj" />
   <Project Path="SmartEmergency.Domain/SmartEmergency.Domain.csproj" />
   <Project Path="SmartEmergency.Infrastructure/SmartEmergency.Infrastructure.csproj" />
