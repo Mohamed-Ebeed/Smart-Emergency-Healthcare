@@ -238,7 +238,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("SuggestedEmergencyTypeId");
 
-                    b.ToTable("AITriageResults");
+                    b.ToTable("AITriageResults", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Allergy", b =>
@@ -262,7 +262,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Allergies");
+                    b.ToTable("Allergies", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Ambulance", b =>
@@ -301,7 +301,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("VehicleNumber")
                         .IsUnique();
 
-                    b.ToTable("Ambulances");
+                    b.ToTable("Ambulances", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.AmbulanceAssignment", b =>
@@ -346,7 +346,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("ParamedicId");
 
-                    b.ToTable("AmbulanceAssignments");
+                    b.ToTable("AmbulanceAssignments", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.AmbulanceLocationHistory", b =>
@@ -380,7 +380,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("AmbulanceId", "RecordedAt");
 
-                    b.ToTable("AmbulanceLocationHistories");
+                    b.ToTable("AmbulanceLocationHistories", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.AmbulanceStatusHistory", b =>
@@ -409,7 +409,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("AmbulanceId");
 
-                    b.ToTable("AmbulanceStatusHistories");
+                    b.ToTable("AmbulanceStatusHistories", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.CaseDepartmentAssignment", b =>
@@ -446,7 +446,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("EmergencyRequestId");
 
-                    b.ToTable("CaseDepartmentAssignments");
+                    b.ToTable("CaseDepartmentAssignments", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.CaseDoctorAssignment", b =>
@@ -483,7 +483,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("EmergencyRequestId");
 
-                    b.ToTable("CaseDoctorAssignments");
+                    b.ToTable("CaseDoctorAssignments", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.CaseStatusHistory", b =>
@@ -518,7 +518,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("EmergencyRequestId");
 
-                    b.ToTable("CaseStatusHistories");
+                    b.ToTable("CaseStatusHistories", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.ChronicDisease", b =>
@@ -542,7 +542,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("ChronicDiseases");
+                    b.ToTable("ChronicDiseases", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Department", b =>
@@ -575,7 +575,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("HospitalId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Doctor", b =>
@@ -614,7 +614,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Doctors");
+                    b.ToTable("Doctors", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.DoctorNote", b =>
@@ -644,7 +644,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("EmergencyRequestId");
 
-                    b.ToTable("DoctorNotes");
+                    b.ToTable("DoctorNotes", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.EmergencyContact", b =>
@@ -676,7 +676,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("EmergencyContacts");
+                    b.ToTable("EmergencyContacts", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.EmergencyHospitalAssignment", b =>
@@ -719,7 +719,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("HospitalId");
 
-                    b.ToTable("EmergencyHospitalAssignments");
+                    b.ToTable("EmergencyHospitalAssignments", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.EmergencyRequest", b =>
@@ -790,7 +790,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("EmergencyRequests");
+                    b.ToTable("EmergencyRequests", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.EmergencyReviewDecision", b =>
@@ -834,7 +834,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("OperatorId");
 
-                    b.ToTable("EmergencyReviewDecisions");
+                    b.ToTable("EmergencyReviewDecisions", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.EmergencyType", b =>
@@ -862,7 +862,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("EmergencyTypes");
+                    b.ToTable("EmergencyTypes", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Hospital", b =>
@@ -897,7 +897,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasKey("HospitalId");
 
-                    b.ToTable("Hospitals");
+                    b.ToTable("Hospitals", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.HospitalBed", b =>
@@ -926,7 +926,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("DepartmentId", "BedNumber")
                         .IsUnique();
 
-                    b.ToTable("HospitalBeds");
+                    b.ToTable("HospitalBeds", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.HospitalCaseAssessment", b =>
@@ -964,7 +964,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("HospitalId");
 
-                    b.ToTable("HospitalCaseAssessments");
+                    b.ToTable("HospitalCaseAssessments", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.HospitalStaff", b =>
@@ -1000,7 +1000,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("HospitalStaffs");
+                    b.ToTable("HospitalStaffs", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.MedicalProfile", b =>
@@ -1031,7 +1031,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("PatientId")
                         .IsUnique();
 
-                    b.ToTable("MedicalProfiles");
+                    b.ToTable("MedicalProfiles", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Medication", b =>
@@ -1051,7 +1051,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasKey("MedicationId");
 
-                    b.ToTable("Medications");
+                    b.ToTable("Medications", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Notification", b =>
@@ -1102,7 +1102,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("RecipientUserId");
 
-                    b.ToTable("Notifications", t =>
+                    b.ToTable("Notifications", null, t =>
                         {
                             t.HasCheckConstraint("CK_Notifications_Recipient", "([RecipientUserId] IS NOT NULL AND [EmergencyContactId] IS NULL) OR ([RecipientUserId] IS NULL AND [EmergencyContactId] IS NOT NULL)");
                         });
@@ -1144,7 +1144,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Paramedics");
+                    b.ToTable("Paramedics", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Patient", b =>
@@ -1178,7 +1178,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patients", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.PatientAllergy", b =>
@@ -1199,7 +1199,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("AllergyId");
 
-                    b.ToTable("PatientAllergies");
+                    b.ToTable("PatientAllergies", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.PatientChronicDisease", b =>
@@ -1220,7 +1220,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("ChronicDiseaseId");
 
-                    b.ToTable("PatientChronicDiseases");
+                    b.ToTable("PatientChronicDiseases", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.PatientMedication", b =>
@@ -1247,7 +1247,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("MedicationId");
 
-                    b.ToTable("PatientMedications");
+                    b.ToTable("PatientMedications", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.PatientTreatmentHistory", b =>
@@ -1282,7 +1282,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("PatientTreatmentHistories");
+                    b.ToTable("PatientTreatmentHistories", (string)null);
                 });
 
             modelBuilder.Entity("SmartEmergency.Infrastructure.Identity.ApplicationUser", b =>
