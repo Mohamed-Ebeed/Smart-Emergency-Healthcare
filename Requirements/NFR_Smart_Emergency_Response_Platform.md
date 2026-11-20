@@ -8,7 +8,7 @@ This document defines the quality attributes and constraints that the Smart Emer
 
 **System context.** The platform, as set out in the approved Project Proposal, is made of a Patient Web App, a Paramedic Web App, and web dashboards for the Operator, Hospital Staff, Doctor, and Admin, all on one backend and database. Its core flow is: emergency request with GPS location, review by the Operator, suggested hospital confirmed by the Operator and sent together with the patient's Emergency Medical Profile, acceptance by Hospital Staff, suggested ambulance confirmed by Hospital Staff, who send it with a Paramedic, live status tracking, patient reception at the hospital, and case closure. AI-assisted triage and smart matching only make suggestions; the Operator and Hospital Staff make the final decision.
 
-The Project Plan fixes the technology: a React frontend, an ASP.NET Core Web API with Entity Framework Core and SQL Server, ASP.NET Core Identity with JWT, SignalR for live updates, Google Login, and map services. The system has six roles: Patient, Operator, Hospital Staff, Paramedic, Doctor, and Admin. The platform does not diagnose patients, and a blood bank is out of scope.
+The Project Plan fixes the technology: an ASP.NET Core MVC frontend with Razor Views, an ASP.NET Core RESTful Web API documented with Swagger, Application Services for the business logic, Entity Framework Core and SQL Server, ASP.NET Core Identity (cookies for the screens and JWT for the API), SignalR for live updates, Google Login, and map services. The system has six roles: Patient, Operator, Hospital Staff, Paramedic, Doctor, and Admin. The platform does not diagnose patients, and a blood bank is out of scope.
 
 **How requirements are written.** Each requirement has an ID in the form NFR-\<area\>-\<number\> and a priority.
 
@@ -181,7 +181,7 @@ All user interfaces are web applications, so compatibility is defined by browser
 | NFR-CMP-04 | Features that need the device (GPS location, notifications) ask for browser permission, and show clear instructions if the user refuses. | Must |
 | NFR-CMP-05 | If location permission is denied or GPS is inaccurate, the patient can confirm or type an address manually. | Must |
 | NFR-CMP-06 | The web apps need no plug-in or installation; the Patient Web App could additionally be installable as a Progressive Web App. | Could |
-| NFR-CMP-07 | The ASP.NET Core Web API runs on Windows or Linux (or in a container) and uses SQL Server; the React frontend is served as static files. | Should |
+| NFR-CMP-07 | The ASP.NET Core app (MVC screens and Web API) runs on Windows or Linux (or in a container) and uses SQL Server. | Should |
 | NFR-CMP-08 | Maps, GPS location, and Google Login are used through their public APIs behind simple interfaces, and API quota is monitored; the system keeps working on its basic functions if one is unavailable (see NFR-REL-05). No government API is required. | Must |
 | NFR-CMP-09 | Data exchange between components uses JSON over HTTPS, with dates in ISO 8601 format and UTC time stored in the database. | Should |
 
@@ -236,7 +236,7 @@ All user interfaces are web applications, so compatibility is defined by browser
 
 ### 10.2 Open items to confirm
 
-- **Alignment with the Plan:** the technology (ASP.NET Core, SQL Server, React, SignalR, JWT), the six roles, the workflow, and the Project KPI values are used as given. The Plan does not say where the system will be hosted.
+- **Alignment with the Plan:** the technology (ASP.NET Core MVC and Web API, SQL Server, SignalR, Identity with JWT for the API), the six roles, the workflow, and the Project KPI values are used as given. The Plan does not say where the system will be hosted.
 - **Hosting and deployment:** the availability and backup requirements (NFR-REL-01, NFR-DAT-07 to NFR-DAT-11) assume a hosted server with automatic backups. Confirm the environment before the Deployment phase (1 to 4 December 2026).
 - **Proposed targets:** values that the Project KPIs do not set (99.5% availability, RPO of 24 hours, RTO of 4 hours, 200 concurrent users) are proposals; confirm them with the Team Lead and the supervisor.
 - **Retention and regulations:** which health-data rules apply decides the final retention period (NFR-DAT-06) and encryption needs (NFR-SEC-10).
