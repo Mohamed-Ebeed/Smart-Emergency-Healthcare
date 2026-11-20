@@ -1,4 +1,5 @@
 
+using SmartEmergency.API.Middleware;
 using SmartEmergency.Application.DependencyInjection;
 using SmartEmergency.Infrastructure.DependencyInjection;
 
@@ -13,18 +14,47 @@ builder.Services.AddInfrastructure(builder.Configuration);
 // Controllers
 builder.Services.AddControllers();
 
+// CORS Configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("WebClient", policy =>
+    {
+        var allowedOrigins = builder.Configuration
+            .GetSection("Cors:AllowedOrigins")
+            .Get<string[]>() ?? Array.Empty<string>();
+
+        policy
+            .WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 // OpenAPI
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// HTTP Pipeline
+// Global Exception Handling
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint(
+            "/openapi/v1.json",
+            "Smart Emergency API v1");
+    });
 }
 
+// HTTP Pipeline
 app.UseHttpsRedirection();
+
+app.UseCors("WebClient");
 
 app.UseAuthentication();
 app.UseAuthorization();
