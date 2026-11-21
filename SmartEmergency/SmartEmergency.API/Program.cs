@@ -1,4 +1,4 @@
-
+using SmartEmergency.API.Extensions;
 using SmartEmergency.API.Middleware;
 using SmartEmergency.Application.DependencyInjection;
 using SmartEmergency.Infrastructure.DependencyInjection;
@@ -30,8 +30,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-// OpenAPI
-builder.Services.AddOpenApi();
+// JWT Authentication
+builder.Services.AddJwtAuthentication(builder.Configuration);
+
+// OpenAPI (with JWT button)
+builder.Services.AddOpenApiWithJwt();
 
 var app = builder.Build();
 
