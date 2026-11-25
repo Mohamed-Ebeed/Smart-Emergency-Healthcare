@@ -4,9 +4,11 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>e63fffe5-c097-48a7-a0c1-10a15a4da5ec</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.13" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="11.0.1" />
   </ItemGroup>
@@ -17,8 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Extensions\" />
     <Folder Include="Hubs\" />
     <Folder Include="Configurations\" />
   </ItemGroup>

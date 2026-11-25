@@ -210,6 +210,46 @@ namespace SmartEmergency.Infrastructure.Identity
             };
             return result;
         }
+        
+        // Login for the API (checks password and lockout, no cookie)
+        public async Task<AuthResultDto> CheckLoginAsync(LoginDto dto)
+        {
+            var result = new AuthResultDto();
+
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null)
+            {
+                result.Errors.Add("Invalid email or password.");
+                return result;
+            }
+
+            var checkResult = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, lockoutOnFailure: true);
+
+            if (checkResult.IsLockedOut)
+            {
+                result.Errors.Add("Account is locked. Try again later.");
+                return result;
+            }
+
+            if (!checkResult.Succeeded)
+            {
+                result.Errors.Add("Invalid email or password.");
+                return result;
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            result.Succeeded = true;
+            result.User = new UserDto
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email!,
+                PhoneNumber = user.PhoneNumber ?? string.Empty,
+                Role = roles.FirstOrDefault() ?? string.Empty
+            };
+            return result;
+        }
 
         // Logout (removes auth cookie)
         public async Task LogoutAsync()
