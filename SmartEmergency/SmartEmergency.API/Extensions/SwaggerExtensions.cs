@@ -1,4 +1,6 @@
-﻿using Microsoft.OpenApi;
+﻿
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi;
 
 namespace SmartEmergency.API.Extensions
 {
@@ -8,23 +10,50 @@ namespace SmartEmergency.API.Extensions
         {
             services.AddOpenApi(options =>
             {
-                // Adds the "Authorize" button in Swagger so we can paste the token
+                // Register Bearer Authentication scheme
                 options.AddDocumentTransformer((document, context, cancellationToken) =>
                 {
                     document.Components ??= new OpenApiComponents();
-                    document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
-                    document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
-                    {
-                        Type = SecuritySchemeType.Http,
-                        Scheme = "bearer",
-                        BearerFormat = "JWT",
-                        Description = "Paste the token you got from login"
-                    };
 
-                    document.Security ??= new List<OpenApiSecurityRequirement>();
-                    document.Security.Add(new OpenApiSecurityRequirement
+                    document.Components.SecuritySchemes ??=
+                        new Dictionary<string, IOpenApiSecurityScheme>();
+
+                    document.Components.SecuritySchemes["Bearer"] =
+                        new OpenApiSecurityScheme
+                        {
+                            Type = SecuritySchemeType.Http,
+                            Scheme = "bearer",
+                            BearerFormat = "JWT",
+                            Description = "Paste the token you got from login"
+                        };
+
+                    return Task.CompletedTask;
+                });
+
+                // Apply security only to authorized endpoints
+                options.AddOperationTransformer((operation, context, cancellationToken) =>
+                {
+                    var metadata = context.Description.ActionDescriptor.EndpointMetadata;
+
+                    var hasAllowAnonymous = metadata
+                        .OfType<IAllowAnonymous>()
+                        .Any();
+
+                    var hasAuthorize = metadata
+                        .OfType<IAuthorizeData>()
+                        .Any();
+
+                    if (hasAllowAnonymous || !hasAuthorize)
                     {
-                        [new OpenApiSecuritySchemeReference("Bearer", document)] = new List<string>()
+                        return Task.CompletedTask;
+                    }
+
+                    operation.Security ??= new List<OpenApiSecurityRequirement>();
+
+                    operation.Security.Add(new OpenApiSecurityRequirement
+                    {
+                        [new OpenApiSecuritySchemeReference("Bearer", context.Document)] =
+                            new List<string>()
                     });
 
                     return Task.CompletedTask;
