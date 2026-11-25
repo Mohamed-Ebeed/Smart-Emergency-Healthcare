@@ -88,19 +88,34 @@ public class AmbulanceService : IAmbulanceService
             })
             .ToListAsync(ct);
 
-    // Ambulance has no IsActive, so deactivate = Offline and activate = Available
+   
     public async Task<bool> SetActiveAsync(int ambulanceId, bool isActive, CancellationToken ct = default)
     {
-        var ambulance = await _db.Ambulances.FirstOrDefaultAsync(a => a.AmbulanceId == ambulanceId, ct);
-        if (ambulance is null) return false;
+        var ambulance = await _db.Ambulances
+            .FirstOrDefaultAsync(a => a.AmbulanceId == ambulanceId, ct);
 
-        if (!isActive && ambulance.AmbulanceStatus == AmbulanceStatus.Busy)
-            throw new InvalidOperationException("Ambulance is on a job now and can't be deactivated.");
+        if (ambulance is null)
+            return false;
 
-        ambulance.AmbulanceStatus = isActive ? AmbulanceStatus.Available : AmbulanceStatus.Offline;
+        if (isActive)
+        {
+            if (ambulance.AmbulanceStatus == AmbulanceStatus.Offline)
+                ambulance.AmbulanceStatus = AmbulanceStatus.Available;
+            else
+                return true;
+        }
+        else
+        {
+            if (ambulance.AmbulanceStatus == AmbulanceStatus.Busy)
+                throw new InvalidOperationException("Ambulance is on a job now and can't be deactivated.");
+
+            ambulance.AmbulanceStatus = AmbulanceStatus.Offline;
+        }
+
         await _db.SaveChangesAsync(ct);
         return true;
     }
+
 
     public async Task<bool> ChangeStatusAsync(int ambulanceId, AmbulanceStatus status, CancellationToken ct = default)
     {

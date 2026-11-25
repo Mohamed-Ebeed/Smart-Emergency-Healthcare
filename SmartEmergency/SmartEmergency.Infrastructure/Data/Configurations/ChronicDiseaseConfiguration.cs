@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartEmergency.Domain.Entities;
+using SmartEmergency.Application.Common.Seed;
 
 namespace SmartEmergency.Infrastructure.Data.Configurations
 {
@@ -14,6 +15,7 @@ namespace SmartEmergency.Infrastructure.Data.Configurations
 
             builder.HasIndex(x => x.Name)
                 .IsUnique();
+            builder.HasData(ReferenceDataSeed.ChronicDiseases);
         }
     }
 }

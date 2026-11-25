@@ -45,16 +45,33 @@ public class StaffProfileService : IStaffProfileService
             })
             .ToListAsync(ct);
 
+
     public async Task<DoctorProfileDto?> UpdateDoctorAsync(int doctorId, UpdateDoctorProfileDto dto, CancellationToken ct = default)
     {
         ValidationHelper.Validate(dto);
 
-        var doctor = await _db.Doctors.FirstOrDefaultAsync(d => d.DoctorId == doctorId, ct);
-        if (doctor is null) return null;
+        var doctor = await _db.Doctors
+            .FirstOrDefaultAsync(d => d.DoctorId == doctorId, ct);
 
-        var departmentExists = await _db.Departments.AnyAsync(d => d.DepartmentId == dto.DepartmentId, ct);
-        if (!departmentExists)
+        if (doctor is null)
+            return null;
+
+        var department = await _db.Departments
+            .Where(d => d.DepartmentId == dto.DepartmentId)
+            .Select(d => new { d.DepartmentId, d.HospitalId })
+            .FirstOrDefaultAsync(ct);
+
+        if (department is null)
             throw new InvalidOperationException("Department not found.");
+
+        var currentHospitalId = await _db.Departments
+            .Where(d => d.DepartmentId == doctor.DepartmentId)
+            .Select(d => d.HospitalId)
+            .FirstAsync(ct);
+
+        if (department.HospitalId != currentHospitalId)
+            throw new InvalidOperationException(
+                "Doctor cannot be assigned to a department in another hospital.");
 
         doctor.DepartmentId = dto.DepartmentId;
         doctor.FullName = dto.FullName.Trim();
@@ -62,8 +79,10 @@ public class StaffProfileService : IStaffProfileService
         doctor.PhoneNumber = dto.PhoneNumber?.Trim();
 
         await _db.SaveChangesAsync(ct);
+
         return await GetDoctorAsync(doctorId, ct);
     }
+
 
     // Paramedic
 
