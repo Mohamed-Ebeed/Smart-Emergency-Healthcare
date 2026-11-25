@@ -238,7 +238,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("SuggestedEmergencyTypeId");
 
-                    b.ToTable("AITriageResults", (string)null);
+                    b.ToTable("AITriageResults");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Allergy", b =>
@@ -262,7 +262,69 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Allergies", (string)null);
+                    b.ToTable("Allergies");
+
+                    b.HasData(
+                        new
+                        {
+                            AllergyId = 1,
+                            Name = "Penicillin"
+                        },
+                        new
+                        {
+                            AllergyId = 2,
+                            Name = "Aspirin"
+                        },
+                        new
+                        {
+                            AllergyId = 3,
+                            Name = "Ibuprofen"
+                        },
+                        new
+                        {
+                            AllergyId = 4,
+                            Name = "Sulfa Drugs"
+                        },
+                        new
+                        {
+                            AllergyId = 5,
+                            Name = "Latex"
+                        },
+                        new
+                        {
+                            AllergyId = 6,
+                            Name = "Peanuts"
+                        },
+                        new
+                        {
+                            AllergyId = 7,
+                            Name = "Seafood"
+                        },
+                        new
+                        {
+                            AllergyId = 8,
+                            Name = "Eggs"
+                        },
+                        new
+                        {
+                            AllergyId = 9,
+                            Name = "Milk"
+                        },
+                        new
+                        {
+                            AllergyId = 10,
+                            Name = "Bee Stings"
+                        },
+                        new
+                        {
+                            AllergyId = 11,
+                            Name = "Dust"
+                        },
+                        new
+                        {
+                            AllergyId = 12,
+                            Name = "Pollen"
+                        });
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Ambulance", b =>
@@ -301,7 +363,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("VehicleNumber")
                         .IsUnique();
 
-                    b.ToTable("Ambulances", (string)null);
+                    b.ToTable("Ambulances");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.AmbulanceAssignment", b =>
@@ -346,7 +408,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("ParamedicId");
 
-                    b.ToTable("AmbulanceAssignments", (string)null);
+                    b.ToTable("AmbulanceAssignments");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.AmbulanceLocationHistory", b =>
@@ -380,7 +442,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("AmbulanceId", "RecordedAt");
 
-                    b.ToTable("AmbulanceLocationHistories", (string)null);
+                    b.ToTable("AmbulanceLocationHistories");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.AmbulanceStatusHistory", b =>
@@ -409,7 +471,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("AmbulanceId");
 
-                    b.ToTable("AmbulanceStatusHistories", (string)null);
+                    b.ToTable("AmbulanceStatusHistories");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.CaseDepartmentAssignment", b =>
@@ -446,7 +508,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("EmergencyRequestId");
 
-                    b.ToTable("CaseDepartmentAssignments", (string)null);
+                    b.ToTable("CaseDepartmentAssignments");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.CaseDoctorAssignment", b =>
@@ -483,7 +545,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("EmergencyRequestId");
 
-                    b.ToTable("CaseDoctorAssignments", (string)null);
+                    b.ToTable("CaseDoctorAssignments");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.CaseStatusHistory", b =>
@@ -518,7 +580,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("EmergencyRequestId");
 
-                    b.ToTable("CaseStatusHistories", (string)null);
+                    b.ToTable("CaseStatusHistories");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.ChronicDisease", b =>
@@ -542,7 +604,69 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("ChronicDiseases", (string)null);
+                    b.ToTable("ChronicDiseases");
+
+                    b.HasData(
+                        new
+                        {
+                            ChronicDiseaseId = 1,
+                            Name = "Diabetes Type 1"
+                        },
+                        new
+                        {
+                            ChronicDiseaseId = 2,
+                            Name = "Diabetes Type 2"
+                        },
+                        new
+                        {
+                            ChronicDiseaseId = 3,
+                            Name = "Hypertension"
+                        },
+                        new
+                        {
+                            ChronicDiseaseId = 4,
+                            Name = "Asthma"
+                        },
+                        new
+                        {
+                            ChronicDiseaseId = 5,
+                            Name = "Heart Disease"
+                        },
+                        new
+                        {
+                            ChronicDiseaseId = 6,
+                            Name = "Chronic Kidney Disease"
+                        },
+                        new
+                        {
+                            ChronicDiseaseId = 7,
+                            Name = "COPD"
+                        },
+                        new
+                        {
+                            ChronicDiseaseId = 8,
+                            Name = "Epilepsy"
+                        },
+                        new
+                        {
+                            ChronicDiseaseId = 9,
+                            Name = "Hepatitis C"
+                        },
+                        new
+                        {
+                            ChronicDiseaseId = 10,
+                            Name = "Thyroid Disease"
+                        },
+                        new
+                        {
+                            ChronicDiseaseId = 11,
+                            Name = "Anemia"
+                        },
+                        new
+                        {
+                            ChronicDiseaseId = 12,
+                            Name = "Cancer"
+                        });
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Department", b =>
@@ -575,7 +699,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("HospitalId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Doctor", b =>
@@ -614,7 +738,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Doctors", (string)null);
+                    b.ToTable("Doctors");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.DoctorNote", b =>
@@ -644,7 +768,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("EmergencyRequestId");
 
-                    b.ToTable("DoctorNotes", (string)null);
+                    b.ToTable("DoctorNotes");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.EmergencyContact", b =>
@@ -676,7 +800,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("EmergencyContacts", (string)null);
+                    b.ToTable("EmergencyContacts");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.EmergencyHospitalAssignment", b =>
@@ -719,7 +843,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("HospitalId");
 
-                    b.ToTable("EmergencyHospitalAssignments", (string)null);
+                    b.ToTable("EmergencyHospitalAssignments");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.EmergencyRequest", b =>
@@ -790,7 +914,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("EmergencyRequests", (string)null);
+                    b.ToTable("EmergencyRequests");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.EmergencyReviewDecision", b =>
@@ -834,7 +958,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("OperatorId");
 
-                    b.ToTable("EmergencyReviewDecisions", (string)null);
+                    b.ToTable("EmergencyReviewDecisions");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.EmergencyType", b =>
@@ -862,7 +986,121 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("EmergencyTypes", (string)null);
+                    b.ToTable("EmergencyTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            EmergencyTypeId = 1,
+                            DefaultPriority = "Critical",
+                            Description = "Heart stopped or not beating normally",
+                            Name = "Cardiac Arrest"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 2,
+                            DefaultPriority = "Critical",
+                            Description = "Chest pain, possible heart attack",
+                            Name = "Heart Attack"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 3,
+                            DefaultPriority = "Critical",
+                            Description = "Face drooping, arm weakness, speech problems",
+                            Name = "Stroke"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 4,
+                            DefaultPriority = "Critical",
+                            Description = "Shortness of breath or choking",
+                            Name = "Breathing Difficulty"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 5,
+                            DefaultPriority = "Critical",
+                            Description = "Heavy bleeding that doesn't stop",
+                            Name = "Severe Bleeding"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 6,
+                            DefaultPriority = "Critical",
+                            Description = "Person not responding",
+                            Name = "Unconscious"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 7,
+                            DefaultPriority = "High",
+                            Description = "Car or motorcycle accident",
+                            Name = "Road Accident"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 8,
+                            DefaultPriority = "High",
+                            Description = "Fire, hot liquid or chemical burns",
+                            Name = "Burns"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 9,
+                            DefaultPriority = "High",
+                            Description = "Convulsions or fits",
+                            Name = "Seizure"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 10,
+                            DefaultPriority = "High",
+                            Description = "Swallowed something toxic or overdose",
+                            Name = "Poisoning"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 11,
+                            DefaultPriority = "High",
+                            Description = "Swelling, rash and trouble breathing",
+                            Name = "Severe Allergic Reaction"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 12,
+                            DefaultPriority = "High",
+                            Description = "Labor or pregnancy complications",
+                            Name = "Pregnancy Emergency"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 13,
+                            DefaultPriority = "Medium",
+                            Description = "Very high or very low blood sugar",
+                            Name = "Diabetic Emergency"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 14,
+                            DefaultPriority = "Medium",
+                            Description = "Broken bone or bad fall",
+                            Name = "Fracture"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 15,
+                            DefaultPriority = "Low",
+                            Description = "Very high temperature",
+                            Name = "High Fever"
+                        },
+                        new
+                        {
+                            EmergencyTypeId = 16,
+                            DefaultPriority = "Medium",
+                            Description = "Anything else",
+                            Name = "Other"
+                        });
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Hospital", b =>
@@ -897,7 +1135,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasKey("HospitalId");
 
-                    b.ToTable("Hospitals", (string)null);
+                    b.ToTable("Hospitals");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.HospitalBed", b =>
@@ -926,7 +1164,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("DepartmentId", "BedNumber")
                         .IsUnique();
 
-                    b.ToTable("HospitalBeds", (string)null);
+                    b.ToTable("HospitalBeds");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.HospitalCaseAssessment", b =>
@@ -964,7 +1202,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("HospitalId");
 
-                    b.ToTable("HospitalCaseAssessments", (string)null);
+                    b.ToTable("HospitalCaseAssessments");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.HospitalStaff", b =>
@@ -1000,7 +1238,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("HospitalStaffs", (string)null);
+                    b.ToTable("HospitalStaffs");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.MedicalProfile", b =>
@@ -1031,7 +1269,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("PatientId")
                         .IsUnique();
 
-                    b.ToTable("MedicalProfiles", (string)null);
+                    b.ToTable("MedicalProfiles");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Medication", b =>
@@ -1047,11 +1285,77 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("MedicationId");
 
-                    b.ToTable("Medications", (string)null);
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Medications");
+
+                    b.HasData(
+                        new
+                        {
+                            MedicationId = 1,
+                            Name = "Insulin"
+                        },
+                        new
+                        {
+                            MedicationId = 2,
+                            Name = "Metformin"
+                        },
+                        new
+                        {
+                            MedicationId = 3,
+                            Name = "Amlodipine"
+                        },
+                        new
+                        {
+                            MedicationId = 4,
+                            Name = "Lisinopril"
+                        },
+                        new
+                        {
+                            MedicationId = 5,
+                            Name = "Aspirin"
+                        },
+                        new
+                        {
+                            MedicationId = 6,
+                            Name = "Warfarin"
+                        },
+                        new
+                        {
+                            MedicationId = 7,
+                            Name = "Clopidogrel"
+                        },
+                        new
+                        {
+                            MedicationId = 8,
+                            Name = "Atorvastatin"
+                        },
+                        new
+                        {
+                            MedicationId = 9,
+                            Name = "Salbutamol Inhaler"
+                        },
+                        new
+                        {
+                            MedicationId = 10,
+                            Name = "Levothyroxine"
+                        },
+                        new
+                        {
+                            MedicationId = 11,
+                            Name = "Paracetamol"
+                        },
+                        new
+                        {
+                            MedicationId = 12,
+                            Name = "Omeprazole"
+                        });
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Notification", b =>
@@ -1144,7 +1448,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Paramedics", (string)null);
+                    b.ToTable("Paramedics");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.Patient", b =>
@@ -1178,7 +1482,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Patients", (string)null);
+                    b.ToTable("Patients");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.PatientAllergy", b =>
@@ -1199,7 +1503,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("AllergyId");
 
-                    b.ToTable("PatientAllergies", (string)null);
+                    b.ToTable("PatientAllergies");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.PatientChronicDisease", b =>
@@ -1220,7 +1524,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("ChronicDiseaseId");
 
-                    b.ToTable("PatientChronicDiseases", (string)null);
+                    b.ToTable("PatientChronicDiseases");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.PatientMedication", b =>
@@ -1247,7 +1551,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("MedicationId");
 
-                    b.ToTable("PatientMedications", (string)null);
+                    b.ToTable("PatientMedications");
                 });
 
             modelBuilder.Entity("SmartEmergency.Domain.Entities.PatientTreatmentHistory", b =>
@@ -1282,7 +1586,7 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("PatientTreatmentHistories", (string)null);
+                    b.ToTable("PatientTreatmentHistories");
                 });
 
             modelBuilder.Entity("SmartEmergency.Infrastructure.Identity.ApplicationUser", b =>

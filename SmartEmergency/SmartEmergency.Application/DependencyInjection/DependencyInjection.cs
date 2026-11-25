@@ -9,6 +9,10 @@ using SmartEmergency.Application.EmergencyRequests.Services;
 using SmartEmergency.Application.Patients.Interfaces;
 using SmartEmergency.Application.Patients.Services;
 
+
+using SmartEmergency.Application.Hospitals.Interfaces;
+using SmartEmergency.Application.Hospitals.Services;
+
 namespace SmartEmergency.Application.DependencyInjection
 {
     public static class DependencyInjection
@@ -20,6 +24,13 @@ namespace SmartEmergency.Application.DependencyInjection
             services.AddScoped<IMedicalProfileService, MedicalProfileService>();
             services.AddScoped<IEmergencyRequestService, EmergencyRequestService>();
             services.AddScoped<INotificationService, NotificationService>();
+
+            // Hospitals :)
+            services.AddScoped<IHospitalService, HospitalService>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
+            services.AddScoped<IHospitalBedService, HospitalBedService>();
+            services.AddScoped<IAmbulanceService, AmbulanceService>();
+            services.AddScoped<IStaffProfileService, StaffProfileService>();
 
             return services;
         }

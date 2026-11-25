@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartEmergency.Domain.Entities;
+using SmartEmergency.Application.Common.Seed;
 
 namespace SmartEmergency.Infrastructure.Data.Configurations
 {
@@ -18,6 +19,7 @@ namespace SmartEmergency.Infrastructure.Data.Configurations
             builder.Property(x => x.DefaultPriority)
                 .HasConversion<string>()
                 .HasMaxLength(50);
+            builder.HasData(ReferenceDataSeed.EmergencyTypes);
         }
     }
 }
