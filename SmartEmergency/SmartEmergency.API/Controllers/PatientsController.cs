@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartEmergency.Application.Patients.DTOs;
@@ -55,7 +56,7 @@ public class PatientsController : PatientApiControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PatientDto>> GetById(int patientId, CancellationToken ct)
     {
-        var denied = await CheckAccessAsync(patientId, EditRoles, isEdit: false, ct);
+        var denied = await CheckAccessAsync(patientId, EditRoles, allowPatient: true, ct);
         if (denied is not null) return denied;
 
         return Ok(await Patients.GetByIdAsync(patientId, ct));
@@ -70,7 +71,7 @@ public class PatientsController : PatientApiControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public Task<ActionResult> Update(int patientId, UpdatePatientDto dto, CancellationToken ct) => HandleAsync(async () =>
     {
-        var denied = await CheckAccessAsync(patientId, EditRoles, isEdit: true, ct);
+        var denied = await CheckAccessAsync(patientId, EditRoles, allowPatient: true, ct);
         if (denied is not null) return denied;
 
         return Ok(await Patients.UpdateAsync(patientId, dto, ct));
