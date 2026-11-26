@@ -7,6 +7,7 @@ namespace SmartEmergency.Application.Auth.Interfaces
         Task<AuthResultDto> RegisterAsync(RegisterDto dto);
 
         Task<AuthResultDto> LoginAsync(LoginDto dto);
+        Task<AuthResultDto> CheckLoginAsync(LoginDto dto);
 
         Task LogoutAsync();
 

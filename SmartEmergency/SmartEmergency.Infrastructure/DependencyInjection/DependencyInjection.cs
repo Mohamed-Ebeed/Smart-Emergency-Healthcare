@@ -43,6 +43,10 @@ namespace SmartEmergency.Infrastructure.DependencyInjection
             // Auth
             services.AddScoped<IAuthService, AuthService>();
 
+            // JWT (used by the API)
+            services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
+
             return services;
         }
     }
