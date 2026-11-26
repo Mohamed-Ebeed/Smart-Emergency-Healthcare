@@ -53,7 +53,7 @@ public class MedicalProfileController : PatientApiControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public Task<ActionResult> SaveProfile(int patientId, UpdateMedicalProfileDto dto, CancellationToken ct) => HandleAsync(async () =>
     {
-        var denied = await CheckAccessAsync(patientId, MedicalEditRoles, allowPatient: true, ct);
+        var denied = await CheckAccessAsync(patientId, MedicalEditRoles, allowPatient: false, ct);
         if (denied is not null) return denied;
 
         var exists = await _profiles.GetAsync(patientId, ct) is not null;
