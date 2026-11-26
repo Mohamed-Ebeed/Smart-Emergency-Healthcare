@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartEmergency.Application.Common.Interfaces;
 using SmartEmergency.Application.Notifications.DTOs;
 using SmartEmergency.Application.Notifications.Interfaces;
@@ -16,10 +15,14 @@ namespace SmartEmergency.Application.Notifications.Services
     public class NotificationService : INotificationService
     {
         private readonly IAppDbContext _db;
+        private readonly INotificationSender _sender;
+        private readonly IRealtimeNotifier _realtime;
 
-        public NotificationService(IAppDbContext db)
+        public NotificationService(IAppDbContext db, INotificationSender sender, IRealtimeNotifier realtime)
         {
             _db = db;
+            _sender = sender;
+            _realtime = realtime;
         }
 
         public async Task<NotificationDto> CreateAsync(
@@ -140,6 +143,8 @@ namespace SmartEmergency.Application.Notifications.Services
             _db.Notifications.AddRange(notifications);
 
             await _db.SaveChangesAsync(cancellationToken);
+
+            await PushLiveAsync(request, notifications, cancellationToken);
         }
 
 
@@ -187,6 +192,8 @@ namespace SmartEmergency.Application.Notifications.Services
             _db.Notifications.AddRange(notifications);
 
             await _db.SaveChangesAsync(cancellationToken);
+
+            await PushLiveAsync(request, notifications, cancellationToken);
         }
 
 
@@ -307,6 +314,13 @@ namespace SmartEmergency.Application.Notifications.Services
             return true;
         }
 
+        // Live push: the in-app notifications to their users + the new status to everyone watching
+        private async Task PushLiveAsync(EmergencyRequest request, List<Notification> notifications, CancellationToken cancellationToken)
+        {
+            foreach (var n in notifications.Where(n => n.RecipientUserId != null && n.Channel == NotificationChannel.InApp))
+                await _sender.SendAsync(n.RecipientUserId!, n.Title, n.Message, n.Channel, cancellationToken);
 
+            await _realtime.RequestStatusChangedAsync(request.EmergencyRequestId, request.CurrentStatus, cancellationToken);
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartEmergency.API.Extensions;
+using SmartEmergency.Application.Common.Models;
 using SmartEmergency.Application.EmergencyRequests.DTOs;
 using SmartEmergency.Application.EmergencyRequests.Interfaces;
 using SmartEmergency.Application.Patients.DTOs;
@@ -29,12 +30,25 @@ public class EmergencyRequestsController : ControllerBase
 
     private readonly IEmergencyRequestService _requests;
     private readonly IPatientService _patients;
+    private readonly IEmergencyCoordinationService _coordination;
 
-    public EmergencyRequestsController(IEmergencyRequestService requests, IPatientService patients)
+    public EmergencyRequestsController(
+        IEmergencyRequestService requests,
+        IPatientService patients,
+        IEmergencyCoordinationService coordination)
     {
         _requests = requests;
         _patients = patients;
+        _coordination = coordination;
     }
+
+    [HttpGet]
+    [Authorize(Roles = Roles.Operator + "," + Roles.Admin)]
+    [ProducesResponseType(typeof(PagedResult<EmergencyRequestDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<PagedResult<EmergencyRequestDto>>> Search(
+        [FromQuery] EmergencyRequestFilterDto filter, CancellationToken ct)
+        => Ok(await _coordination.SearchAsync(filter, ct));
 
     /// <summary>Create a new emergency request for the logged-in patient.</summary>
     [HttpPost]
@@ -134,7 +148,128 @@ public class EmergencyRequestsController : ControllerBase
         return Ok(await _requests.GetByIdAsync(requestId, ct));
     }
 
+    [HttpGet("{requestId:long}/status-history")]
+    [Authorize(Roles = Roles.Patient + "," + StaffRoles)]
+    [EndpointSummary("Get status history of an emergency request")]
+    [EndpointDescription("Every status change with who changed it and when. Patients can only see their own requests.")]
+    [ProducesResponseType(typeof(List<CaseStatusHistoryDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<List<CaseStatusHistoryDto>>> GetStatusHistory(long requestId, CancellationToken ct)
+    {
+        await EnsureCanViewAsync(requestId, ct);
+        return Ok(await _coordination.GetStatusHistoryAsync(requestId, ct));
+    }
+    [HttpPost("{requestId:long}/hospital-assignments")]
+    [Authorize(Roles = Roles.Operator + "," + Roles.Admin)]
+    [EndpointSummary("Send an emergency request to a hospital")]
+    [EndpointDescription("Creates a pending hospital assignment and moves the request to SentToHospital. The request must be Confirmed (or SentToHospital after a rejection).")]
+    [ProducesResponseType(typeof(HospitalAssignmentDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<HospitalAssignmentDto>> SendToHospital(
+    long requestId, [FromBody] SendToHospitalDto body, CancellationToken ct)
+    => Ok(await _coordination.SendToHospitalAsync(requestId, body, GetUserId(), ct));
+
+    [HttpGet("{requestId:long}/hospital-assignments")]
+    [Authorize(Roles = Roles.Patient + "," + StaffRoles)]
+    [EndpointSummary("Get the hospitals this request was sent to and their answers")]
+    [ProducesResponseType(typeof(List<HospitalAssignmentDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<List<HospitalAssignmentDto>>> GetHospitalAssignments(long requestId, CancellationToken ct)
+    {
+        await EnsureCanViewAsync(requestId, ct);
+        return Ok(await _coordination.GetHospitalAssignmentsAsync(requestId, ct));
+    }
+
+    [HttpPost("hospital-assignments/{assignmentId:long}/respond")]
+    [Authorize(Roles = Roles.HospitalStaff + "," + Roles.Admin)]
+    [EndpointSummary("Hospital accepts or rejects a request")]
+    [EndpointDescription("Hospital staff can only answer requests sent to their own hospital. Body: { \"accept\": true/false, \"notes\": \"...\" }")]
+    [ProducesResponseType(typeof(HospitalAssignmentDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<HospitalAssignmentDto>> RespondToHospitalAssignment(
+        long assignmentId, [FromBody] HospitalResponseDto body, CancellationToken ct)
+        => Ok(await _coordination.RespondToHospitalAssignmentAsync(
+            assignmentId, body, GetUserId(), User.IsInRole(Roles.Admin), ct));
+
+    [HttpPost("{requestId:long}/ambulance-assignments")]
+    [Authorize(Roles = Roles.Operator + "," + Roles.Admin)]
+    [EndpointSummary("Assign an ambulance and a paramedic to a request")]
+    [EndpointDescription("Only after a hospital accepted the request. Ambulance becomes Busy, paramedic not available, request becomes AmbulanceAssigned.")]
+    [ProducesResponseType(typeof(AmbulanceAssignmentDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<AmbulanceAssignmentDto>> AssignAmbulance(
+    long requestId, [FromBody] AssignAmbulanceDto body, CancellationToken ct)
+    => Ok(await _coordination.AssignAmbulanceAsync(requestId, body, GetUserId(), ct));
+
+    [HttpGet("{requestId:long}/next-hospital")]
+    [Authorize(Roles = Roles.Operator + "," + Roles.Admin)]
+    [EndpointSummary("Suggest the next hospital to try")]
+    [EndpointDescription("Active hospitals not tried before for this request. Hospitals with free beds first, then the nearest to the patient.")]
+    [ProducesResponseType(typeof(NextHospitalDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<NextHospitalDto>> GetNextHospital(long requestId, CancellationToken ct)
+    => Ok(await _coordination.GetNextHospitalAsync(requestId, ct));
+
+    [HttpPost("{requestId:long}/hospital-assignments/next")]
+    [Authorize(Roles = Roles.Operator + "," + Roles.Admin)]
+    [EndpointSummary("Send the request to the next suitable hospital")]
+    [EndpointDescription("Use it after a hospital rejects the request. Picks the same hospital that next-hospital suggests.")]
+    [ProducesResponseType(typeof(HospitalAssignmentDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<HospitalAssignmentDto>> SendToNextHospital(long requestId, CancellationToken ct)
+        => Ok(await _coordination.SendToNextHospitalAsync(requestId, GetUserId(), ct));
+
+    [HttpGet("{requestId:long}/ambulance-assignments")]
+    [Authorize(Roles = Roles.Patient + "," + StaffRoles)]
+    [EndpointSummary("Get the ambulance assignments of a request")]
+    [ProducesResponseType(typeof(List<AmbulanceAssignmentDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<List<AmbulanceAssignmentDto>>> GetAmbulanceAssignments(long requestId, CancellationToken ct)
+    {
+        await EnsureCanViewAsync(requestId, ct);
+        return Ok(await _coordination.GetAmbulanceAssignmentsAsync(requestId, ct));
+    }
+
+    [HttpGet("ambulance-assignments/{assignmentId:long}")]
+    [Authorize(Roles = StaffRoles)]
+    [EndpointSummary("Get one ambulance assignment")]
+    [ProducesResponseType(typeof(AmbulanceAssignmentDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<AmbulanceAssignmentDto>> GetAmbulanceAssignment(long assignmentId, CancellationToken ct)
+        => Ok(await _coordination.GetAmbulanceAssignmentAsync(assignmentId, ct));
+
+    [HttpGet("ambulance-assignments/mine")]
+    [Authorize(Roles = Roles.Paramedic)]
+    [EndpointSummary("Get my assignments (logged in paramedic)")]
+    [ProducesResponseType(typeof(List<AmbulanceAssignmentDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<AmbulanceAssignmentDto>>> GetMyAmbulanceAssignments(CancellationToken ct)
+        => Ok(await _coordination.GetMyAmbulanceAssignmentsAsync(GetUserId(), ct));
+
     // ================= Helpers =================
+
+    // Patient can only open his own request, staff can open any
+    private async Task EnsureCanViewAsync(long requestId, CancellationToken ct)
+    {
+        var request = await _requests.GetByIdAsync(requestId, ct);
+
+        if (User.IsInRole(Roles.Patient))
+        {
+            var patient = await GetCurrentPatientAsync(ct);
+            if (patient.PatientId != request.PatientId)
+                throw new UnauthorizedAccessException("You can only view your own emergency requests.");
+        }
+    }
 
     private string GetUserId() =>
         User.FindFirstValue(ClaimTypes.NameIdentifier)

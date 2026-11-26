@@ -2,6 +2,7 @@
 using SmartEmergency.Application.Common.Interfaces;
 using SmartEmergency.Application.Hospitals.DTOs;
 using SmartEmergency.Application.Hospitals.Interfaces;
+using SmartEmergency.Application.Notifications.Interfaces;
 using SmartEmergency.Application.Patients.Services;
 using SmartEmergency.Domain.Entities;
 using SmartEmergency.Domain.Enums;
@@ -11,8 +12,13 @@ namespace SmartEmergency.Application.Hospitals.Services;
 public class AmbulanceService : IAmbulanceService
 {
     private readonly IAppDbContext _db;
+    private readonly IRealtimeNotifier _realtime;
 
-    public AmbulanceService(IAppDbContext db) => _db = db;
+    public AmbulanceService(IAppDbContext db, IRealtimeNotifier realtime)
+    {
+        _db = db;
+        _realtime = realtime;
+    }
 
     public async Task<AmbulanceDto> CreateAsync(CreateAmbulanceDto dto, CancellationToken ct = default)
     {
@@ -88,7 +94,7 @@ public class AmbulanceService : IAmbulanceService
             })
             .ToListAsync(ct);
 
-   
+
     public async Task<bool> SetActiveAsync(int ambulanceId, bool isActive, CancellationToken ct = default)
     {
         var ambulance = await _db.Ambulances
@@ -113,6 +119,7 @@ public class AmbulanceService : IAmbulanceService
         }
 
         await _db.SaveChangesAsync(ct);
+        await PushLiveAsync(ambulance, ct);
         return true;
     }
 
@@ -127,6 +134,7 @@ public class AmbulanceService : IAmbulanceService
 
         ambulance.AmbulanceStatus = status;
         await _db.SaveChangesAsync(ct);
+        await PushLiveAsync(ambulance, ct);
         return true;
     }
 
@@ -140,7 +148,21 @@ public class AmbulanceService : IAmbulanceService
         ambulance.LastKnownLatitude = dto.Latitude;
         ambulance.LastKnownLongitude = dto.Longitude;
         await _db.SaveChangesAsync(ct);
+        await PushLiveAsync(ambulance, ct);
         return true;
+    }
+
+    // Live update of the ambulance (status / location) also to the request it is working on
+    private async Task PushLiveAsync(Ambulance ambulance, CancellationToken ct)
+    {
+        var activeRequestId = await _db.AmbulanceAssignments
+            .Where(a => a.AmbulanceId == ambulance.AmbulanceId && a.CompletedAt == null && a.AssignmentStatus == AssignmentStatus.Accepted)
+            .OrderByDescending(a => a.AssignedAt)
+            .Select(a => (long?)a.EmergencyRequestId)
+            .FirstOrDefaultAsync(ct);
+
+        await _realtime.AmbulanceChangedAsync(ambulance.AmbulanceId, ambulance.AmbulanceStatus,
+            ambulance.LastKnownLatitude, ambulance.LastKnownLongitude, activeRequestId, ct);
     }
 
     private static AmbulanceDto ToDto(Ambulance a) => new()

@@ -34,6 +34,19 @@ namespace SmartEmergency.API.Extensions
                         RoleClaimType = ClaimTypes.Role,
                         ClockSkew = TimeSpan.Zero
                     };
+
+                    // SignalR sends the token in the query string (?access_token=...)
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var token = context.Request.Query["access_token"];
+                            if (!string.IsNullOrEmpty(token) && context.HttpContext.Request.Path.StartsWithSegments("/hubs"))
+                                context.Token = token;
+
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             // Role policies

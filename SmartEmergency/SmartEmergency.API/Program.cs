@@ -1,6 +1,8 @@
 using SmartEmergency.API.Extensions;
+using SmartEmergency.API.Hubs;
 using SmartEmergency.API.Middleware;
 using SmartEmergency.Application.DependencyInjection;
+using SmartEmergency.Application.Notifications.Interfaces;
 using SmartEmergency.Infrastructure.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,11 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // Controllers
 builder.Services.AddControllers();
+
+// SignalR (live updates). Replaces the do-nothing defaults from AddApplication
+builder.Services.AddSignalR();
+builder.Services.AddScoped<IRealtimeNotifier, SignalRRealtimeNotifier>();
+builder.Services.AddScoped<INotificationSender, SignalRNotificationSender>();
 
 // CORS Configuration
 builder.Services.AddCors(options =>
@@ -63,5 +70,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<EmergencyHub>("/hubs/emergency");
 
 app.Run();
