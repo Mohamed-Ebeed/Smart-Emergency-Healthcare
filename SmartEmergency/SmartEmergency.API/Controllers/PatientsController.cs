@@ -27,6 +27,7 @@ public class PatientsController : PatientApiControllerBase
     public async Task<ActionResult<PatientDto>> GetMe(CancellationToken ct)
     {
         var patient = await Patients.GetByUserIdAsync(CurrentUserId!, ct);
+
         if (patient is null)
             return NotFound(Problem404("No patient record for this account."));
 
@@ -39,25 +40,36 @@ public class PatientsController : PatientApiControllerBase
     [ProducesResponseType(typeof(PatientDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public Task<ActionResult> UpdateMe(UpdatePatientDto dto, CancellationToken ct) => HandleAsync(async () =>
-    {
-        var patient = await Patients.GetByUserIdAsync(CurrentUserId!, ct);
-        if (patient is null)
-            return NotFound(Problem404("No patient record for this account."));
+    public Task<ActionResult> UpdateMe(
+        UpdatePatientDto dto,
+        CancellationToken ct) => HandleAsync(async () =>
+        {
+            var patient = await Patients.GetByUserIdAsync(CurrentUserId!, ct);
 
-        return Ok(await Patients.UpdateAsync(patient.PatientId, dto, ct));
-    });
+            if (patient is null)
+                return NotFound(Problem404("No patient record for this account."));
+
+            return Ok(await Patients.UpdateAsync(patient.PatientId, dto, ct));
+        });
 
     [HttpGet("{patientId:int}")]
     [EndpointSummary("Get patient details by id")]
-    [EndpointDescription("Patient can open his own record only. Staff roles can open any patient.")]
+    [EndpointDescription("Allowed for the patient himself or Admin only.")]
     [ProducesResponseType(typeof(PatientDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<PatientDto>> GetById(int patientId, CancellationToken ct)
+    public async Task<ActionResult<PatientDto>> GetById(
+        int patientId,
+        CancellationToken ct)
     {
-        var denied = await CheckAccessAsync(patientId, EditRoles, allowPatient: true, ct);
-        if (denied is not null) return denied;
+        var denied = await CheckAccessAsync(
+            patientId,
+            EditRoles,
+            allowPatient: true,
+            ct);
+
+        if (denied is not null)
+            return denied;
 
         return Ok(await Patients.GetByIdAsync(patientId, ct));
     }
@@ -69,11 +81,20 @@ public class PatientsController : PatientApiControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public Task<ActionResult> Update(int patientId, UpdatePatientDto dto, CancellationToken ct) => HandleAsync(async () =>
-    {
-        var denied = await CheckAccessAsync(patientId, EditRoles, allowPatient: true, ct);
-        if (denied is not null) return denied;
+    public Task<ActionResult> Update(
+        int patientId,
+        UpdatePatientDto dto,
+        CancellationToken ct) => HandleAsync(async () =>
+        {
+            var denied = await CheckAccessAsync(
+                patientId,
+                EditRoles,
+                allowPatient: true,
+                ct);
 
-        return Ok(await Patients.UpdateAsync(patientId, dto, ct));
-    });
+            if (denied is not null)
+                return denied;
+
+            return Ok(await Patients.UpdateAsync(patientId, dto, ct));
+        });
 }
