@@ -131,6 +131,14 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
             if (string.IsNullOrWhiteSpace(userRole))
                 throw new UnauthorizedAccessException("User role is required.");
 
+            // Sending a request to a hospital must be done through
+            // EmergencyCoordinationService.SendToHospitalAsync.
+            if (newStatus == RequestStatus.SentToHospital)
+            {
+                throw new UnauthorizedAccessException(
+                    "Use the hospital assignment workflow to send an emergency request to a hospital.");
+            }
+
             var request = await _db.EmergencyRequests
                 .FirstOrDefaultAsync(
                     r => r.EmergencyRequestId == requestId,
@@ -146,21 +154,20 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
             switch (userRole)
             {
                 case Roles.Admin:
-                    // Admin can perform any valid transition.
+                    // Admin can perform any valid transition
+                    // except SentToHospital, which is handled separately.
                     break;
 
                 case Roles.Operator:
                     var isAllowedOperatorTransition =
-                        (request.CurrentStatus == RequestStatus.Submitted &&
-                         (newStatus == RequestStatus.Confirmed ||
-                          newStatus == RequestStatus.Invalid)) ||
-                        (request.CurrentStatus == RequestStatus.Confirmed &&
-                         newStatus == RequestStatus.SentToHospital);
+                        request.CurrentStatus == RequestStatus.Submitted &&
+                        (newStatus == RequestStatus.Confirmed ||
+                         newStatus == RequestStatus.Invalid);
 
                     if (!isAllowedOperatorTransition)
                     {
                         throw new UnauthorizedAccessException(
-                            "Operators can only confirm, invalidate, or send confirmed requests to hospitals.");
+                            "Operators can only confirm or invalidate submitted requests. Use the hospital assignment workflow to send requests to hospitals.");
                     }
                     break;
 
