@@ -621,13 +621,23 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
 
     public async Task<List<AmbulanceAssignmentDto>> GetMyAmbulanceAssignmentsAsync(
         string paramedicUserId,
-        CancellationToken ct = default) =>
-        await _db.AmbulanceAssignments
+        CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(paramedicUserId))
+            throw new ArgumentException(
+                "Paramedic user ID is required.");
+
+        return await _db.AmbulanceAssignments
             .AsNoTracking()
-            .Where(a => a.Paramedic.UserId == paramedicUserId)
+            .Where(a =>
+                a.Paramedic.UserId == paramedicUserId &&
+                a.Paramedic.IsActive &&
+                a.CompletedAt == null &&
+                a.AssignmentStatus == AssignmentStatus.Accepted)
             .OrderByDescending(a => a.AssignedAt)
             .Select(ToAmbulanceAssignmentDto)
             .ToListAsync(ct);
+    }
 
     public async Task EnsureCanViewRequestAsync(
         long requestId,

@@ -226,11 +226,14 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
 
             Ambulance? releasedAmbulance = null;
 
-            if (newStatus == RequestStatus.Completed)
+            if (newStatus == RequestStatus.Completed ||
+                newStatus == RequestStatus.Cancelled)
             {
-                releasedAmbulance = await CompleteAmbulanceAssignmentAsync(
-                    requestId,
-                    cancellationToken);
+                releasedAmbulance =
+                    await ReleaseAmbulanceAssignmentAsync(
+                        requestId,
+                        newStatus,
+                        cancellationToken);
             }
 
             await _db.SaveChangesAsync(cancellationToken);
@@ -259,8 +262,9 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
             return true;
         }
 
-        private async Task<Ambulance?> CompleteAmbulanceAssignmentAsync(
+        private async Task<Ambulance?> ReleaseAmbulanceAssignmentAsync(
             long requestId,
+            RequestStatus requestStatus,
             CancellationToken ct)
         {
             var assignment = await _db.AmbulanceAssignments
@@ -279,6 +283,12 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
 
             assignment.CompletedAt = now;
 
+            if (requestStatus == RequestStatus.Cancelled)
+            {
+                assignment.AssignmentStatus =
+                    AssignmentStatus.Cancelled;
+            }
+
             assignment.Ambulance.AmbulanceStatus =
                 AmbulanceStatus.Available;
 
@@ -290,7 +300,7 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
                     AmbulanceId = assignment.AmbulanceId,
                     Status = AmbulanceStatus.Available,
                     ChangedAt = now,
-                    Notes = $"Emergency request {requestId} completed"
+                    Notes = $"Emergency request {requestId} {requestStatus}. Ambulance released."
                 });
 
             return assignment.Ambulance;
