@@ -13,7 +13,12 @@ namespace SmartEmergency.Application.EmergencyRequests.Interfaces
         Task<EmergencyRequestDto> CreateAsync(CreateEmergencyRequestDto dto, CancellationToken cancellationToken = default);
         Task<EmergencyRequestDto> GetByIdAsync(long requestId, CancellationToken cancellationToken = default);
         Task<List<EmergencyRequestDto>> GetByPatientAsync(int patientId, CancellationToken cancellationToken = default);
-        Task<bool> ChangeStatusAsync(long requestId, RequestStatus newStatus, string userId);
+        Task<bool> ChangeStatusAsync(
+            long requestId,
+            RequestStatus newStatus,
+            string userId,
+            string userRole,
+            CancellationToken cancellationToken = default);
         Task CancelAsync(long requestId, string userId, CancellationToken cancellationToken = default);
     }
 }

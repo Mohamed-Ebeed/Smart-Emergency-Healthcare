@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using SmartEmergency.Application.Common.Interfaces;
 using SmartEmergency.Application.Hospitals.DTOs;
 using SmartEmergency.Application.Hospitals.Interfaces;
+using SmartEmergency.Application.Notifications.Interfaces;
 using SmartEmergency.Application.Patients.Services;
 using SmartEmergency.Domain.Entities;
 using SmartEmergency.Domain.Enums;
@@ -11,22 +13,36 @@ namespace SmartEmergency.Application.Hospitals.Services;
 public class AmbulanceService : IAmbulanceService
 {
     private readonly IAppDbContext _db;
+    private readonly IRealtimeNotifier _realtime;
 
-    public AmbulanceService(IAppDbContext db) => _db = db;
+    public AmbulanceService(
+        IAppDbContext db,
+        IRealtimeNotifier realtime)
+    {
+        _db = db;
+        _realtime = realtime;
+    }
 
-    public async Task<AmbulanceDto> CreateAsync(CreateAmbulanceDto dto, CancellationToken ct = default)
+    public async Task<AmbulanceDto> CreateAsync(
+        CreateAmbulanceDto dto,
+        CancellationToken ct = default)
     {
         ValidationHelper.Validate(dto);
 
-        var hospitalExists = await _db.Hospitals.AnyAsync(h => h.HospitalId == dto.HospitalId, ct);
+        var hospitalExists = await _db.Hospitals
+            .AnyAsync(h => h.HospitalId == dto.HospitalId, ct);
+
         if (!hospitalExists)
             throw new InvalidOperationException("Hospital not found.");
 
-        // Vehicle number must be unique
         var vehicleNumber = dto.VehicleNumber.Trim();
-        var numberUsed = await _db.Ambulances.AnyAsync(a => a.VehicleNumber == vehicleNumber, ct);
+
+        var numberUsed = await _db.Ambulances
+            .AnyAsync(a => a.VehicleNumber == vehicleNumber, ct);
+
         if (numberUsed)
-            throw new InvalidOperationException("Vehicle number is already used.");
+            throw new InvalidOperationException(
+                "Vehicle number is already used.");
 
         var ambulance = new Ambulance
         {
@@ -36,31 +52,50 @@ public class AmbulanceService : IAmbulanceService
         };
 
         _db.Ambulances.Add(ambulance);
+
         await _db.SaveChangesAsync(ct);
 
         return ToDto(ambulance);
     }
 
-    public async Task<AmbulanceDto?> UpdateAsync(int ambulanceId, UpdateAmbulanceDto dto, CancellationToken ct = default)
+    public async Task<AmbulanceDto?> UpdateAsync(
+        int ambulanceId,
+        UpdateAmbulanceDto dto,
+        CancellationToken ct = default)
     {
         ValidationHelper.Validate(dto);
 
-        var ambulance = await _db.Ambulances.FirstOrDefaultAsync(a => a.AmbulanceId == ambulanceId, ct);
-        if (ambulance is null) return null;
+        var ambulance = await _db.Ambulances
+            .FirstOrDefaultAsync(
+                a => a.AmbulanceId == ambulanceId, ct);
+
+        if (ambulance is null)
+            return null;
 
         var vehicleNumber = dto.VehicleNumber.Trim();
-        var numberUsed = await _db.Ambulances.AnyAsync(a => a.VehicleNumber == vehicleNumber && a.AmbulanceId != ambulanceId, ct);
+
+        var numberUsed = await _db.Ambulances
+            .AnyAsync(
+                a => a.VehicleNumber == vehicleNumber &&
+                     a.AmbulanceId != ambulanceId,
+                ct);
+
         if (numberUsed)
-            throw new InvalidOperationException("Vehicle number is already used.");
+            throw new InvalidOperationException(
+                "Vehicle number is already used.");
 
         ambulance.VehicleNumber = vehicleNumber;
 
         await _db.SaveChangesAsync(ct);
+
         return ToDto(ambulance);
     }
 
-    public Task<AmbulanceDto?> GetByIdAsync(int ambulanceId, CancellationToken ct = default) =>
-        _db.Ambulances.AsNoTracking()
+    public Task<AmbulanceDto?> GetByIdAsync(
+        int ambulanceId,
+        CancellationToken ct = default) =>
+        _db.Ambulances
+            .AsNoTracking()
             .Where(a => a.AmbulanceId == ambulanceId)
             .Select(a => new AmbulanceDto
             {
@@ -73,8 +108,11 @@ public class AmbulanceService : IAmbulanceService
             })
             .FirstOrDefaultAsync(ct);
 
-    public Task<List<AmbulanceDto>> GetByHospitalAsync(int hospitalId, CancellationToken ct = default) =>
-        _db.Ambulances.AsNoTracking()
+    public Task<List<AmbulanceDto>> GetByHospitalAsync(
+        int hospitalId,
+        CancellationToken ct = default) =>
+        _db.Ambulances
+            .AsNoTracking()
             .Where(a => a.HospitalId == hospitalId)
             .OrderBy(a => a.VehicleNumber)
             .Select(a => new AmbulanceDto
@@ -88,59 +126,175 @@ public class AmbulanceService : IAmbulanceService
             })
             .ToListAsync(ct);
 
-   
-    public async Task<bool> SetActiveAsync(int ambulanceId, bool isActive, CancellationToken ct = default)
+    public async Task<bool> SetActiveAsync(
+        int ambulanceId,
+        bool isActive,
+        CancellationToken ct = default)
     {
         var ambulance = await _db.Ambulances
-            .FirstOrDefaultAsync(a => a.AmbulanceId == ambulanceId, ct);
+            .FirstOrDefaultAsync(
+                a => a.AmbulanceId == ambulanceId, ct);
 
         if (ambulance is null)
             return false;
 
         if (isActive)
         {
-            if (ambulance.AmbulanceStatus == AmbulanceStatus.Offline)
-                ambulance.AmbulanceStatus = AmbulanceStatus.Available;
-            else
+            if (ambulance.AmbulanceStatus != AmbulanceStatus.Offline)
                 return true;
+
+            ambulance.AmbulanceStatus = AmbulanceStatus.Available;
         }
         else
         {
-            if (ambulance.AmbulanceStatus == AmbulanceStatus.Busy)
-                throw new InvalidOperationException("Ambulance is on a job now and can't be deactivated.");
+            var hasActiveAssignment =
+                await HasActiveAssignmentAsync(ambulanceId, ct);
+
+            if (hasActiveAssignment ||
+                ambulance.AmbulanceStatus == AmbulanceStatus.Busy)
+            {
+                throw new InvalidOperationException(
+                    "Ambulance is assigned to an active emergency and cannot be deactivated.");
+            }
+
+            if (ambulance.AmbulanceStatus == AmbulanceStatus.Offline)
+                return true;
 
             ambulance.AmbulanceStatus = AmbulanceStatus.Offline;
         }
 
+        AddStatusHistory(
+            ambulance,
+            ambulance.AmbulanceStatus,
+            isActive
+                ? "Ambulance activated"
+                : "Ambulance deactivated");
+
         await _db.SaveChangesAsync(ct);
+
+        await PushLiveAsync(ambulance, ct);
+
         return true;
     }
 
-
-    public async Task<bool> ChangeStatusAsync(int ambulanceId, AmbulanceStatus status, CancellationToken ct = default)
+    public async Task<bool> ChangeStatusAsync(
+        int ambulanceId,
+        AmbulanceStatus status,
+        CancellationToken ct = default)
     {
         if (!Enum.IsDefined(status))
-            throw new InvalidOperationException("Invalid ambulance status.");
+            throw new InvalidOperationException(
+                "Invalid ambulance status.");
 
-        var ambulance = await _db.Ambulances.FirstOrDefaultAsync(a => a.AmbulanceId == ambulanceId, ct);
-        if (ambulance is null) return false;
+        if (status == AmbulanceStatus.Busy)
+            throw new InvalidOperationException(
+                "Busy status can only be set through an ambulance assignment.");
+
+        var ambulance = await _db.Ambulances
+            .FirstOrDefaultAsync(
+                a => a.AmbulanceId == ambulanceId, ct);
+
+        if (ambulance is null)
+            return false;
+
+        var hasActiveAssignment =
+            await HasActiveAssignmentAsync(ambulanceId, ct);
+
+        if (hasActiveAssignment ||
+            ambulance.AmbulanceStatus == AmbulanceStatus.Busy)
+        {
+            throw new InvalidOperationException(
+                "Ambulance is busy or has an active assignment. Its status cannot be changed manually.");
+        }
+
+        if (ambulance.AmbulanceStatus == status)
+            return true;
 
         ambulance.AmbulanceStatus = status;
+
+        AddStatusHistory(
+            ambulance,
+            status,
+            "Ambulance status changed");
+
         await _db.SaveChangesAsync(ct);
+
+        await PushLiveAsync(ambulance, ct);
+
         return true;
     }
 
-    public async Task<bool> UpdateLocationAsync(int ambulanceId, UpdateAmbulanceLocationDto dto, CancellationToken ct = default)
+    public async Task<bool> UpdateLocationAsync(
+        int ambulanceId,
+        UpdateAmbulanceLocationDto dto,
+        CancellationToken ct = default)
     {
         ValidationHelper.Validate(dto);
 
-        var ambulance = await _db.Ambulances.FirstOrDefaultAsync(a => a.AmbulanceId == ambulanceId, ct);
-        if (ambulance is null) return false;
+        var ambulance = await _db.Ambulances
+            .FirstOrDefaultAsync(
+                a => a.AmbulanceId == ambulanceId, ct);
+
+        if (ambulance is null)
+            return false;
 
         ambulance.LastKnownLatitude = dto.Latitude;
         ambulance.LastKnownLongitude = dto.Longitude;
+
         await _db.SaveChangesAsync(ct);
+
+        await PushLiveAsync(ambulance, ct);
+
         return true;
+    }
+
+    private Task<bool> HasActiveAssignmentAsync(
+        int ambulanceId,
+        CancellationToken ct)
+    {
+        return _db.AmbulanceAssignments.AnyAsync(
+            a => a.AmbulanceId == ambulanceId &&
+                 a.CompletedAt == null &&
+                 a.AssignmentStatus == AssignmentStatus.Accepted,
+            ct);
+    }
+
+    private void AddStatusHistory(
+        Ambulance ambulance,
+        AmbulanceStatus status,
+        string notes)
+    {
+        _db.AmbulanceStatusHistories.Add(
+            new AmbulanceStatusHistory
+            {
+                AmbulanceId = ambulance.AmbulanceId,
+                Status = status,
+                ChangedAt = DateTime.UtcNow,
+                Notes = notes
+            });
+    }
+
+    private async Task PushLiveAsync(
+        Ambulance ambulance,
+        CancellationToken ct)
+    {
+        var activeRequestId = await _db.AmbulanceAssignments
+            .Where(a =>
+                a.AmbulanceId == ambulance.AmbulanceId &&
+                a.CompletedAt == null &&
+                a.AssignmentStatus == AssignmentStatus.Accepted)
+            .OrderByDescending(a => a.AssignedAt)
+            .Select(a => (long?)a.EmergencyRequestId)
+            .FirstOrDefaultAsync(ct);
+
+        await _realtime.AmbulanceChangedAsync(
+            ambulance.AmbulanceId,
+            ambulance.HospitalId,
+            ambulance.AmbulanceStatus,
+            ambulance.LastKnownLatitude,
+            ambulance.LastKnownLongitude,
+            activeRequestId,
+            ct);
     }
 
     private static AmbulanceDto ToDto(Ambulance a) => new()

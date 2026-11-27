@@ -26,7 +26,6 @@ public class MedicalProfileController : PatientApiControllerBase
     public MedicalProfileController(IPatientService patients, IMedicalProfileService profiles) : base(patients)
         => _profiles = profiles;
 
-
     [HttpGet("medical-profile")]
     [EndpointSummary("Get medical profile")]
     [ProducesResponseType(typeof(MedicalProfileDto), StatusCodes.Status200OK)]
@@ -63,7 +62,6 @@ public class MedicalProfileController : PatientApiControllerBase
 
         return Ok(profile);
     });
-
 
     [HttpGet("chronic-diseases")]
     [EndpointSummary("Get chronic diseases")]
@@ -165,7 +163,6 @@ public class MedicalProfileController : PatientApiControllerBase
             : NotFound(Problem404("Allergy not found for this patient."));
     });
 
-
     [HttpGet("medications")]
     [EndpointSummary("Get medications")]
     [ProducesResponseType(typeof(IReadOnlyList<PatientMedicationDto>), StatusCodes.Status200OK)]
@@ -195,7 +192,7 @@ public class MedicalProfileController : PatientApiControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public Task<ActionResult> UpdateMedication(int patientId, int medicationId, UpdatePatientMedicationDto dto, CancellationToken ct) => HandleAsync(async () =>
     {
-        var denied = await CheckAccessAsync(patientId, MedicationEditRoles, allowPatient: false, ct);
+        var denied = await CheckAccessAsync(patientId, MedicationEditRoles, allowPatient: true, ct);
         if (denied is not null) return denied;
 
         var item = await _profiles.UpdateMedicationAsync(patientId, medicationId, dto, ct);
@@ -208,7 +205,7 @@ public class MedicalProfileController : PatientApiControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public Task<ActionResult> RemoveMedication(int patientId, int medicationId, CancellationToken ct) => HandleAsync(async () =>
     {
-        var denied = await CheckAccessAsync(patientId, MedicationEditRoles, allowPatient: false, ct);
+        var denied = await CheckAccessAsync(patientId, MedicationEditRoles, allowPatient: true, ct);
         if (denied is not null) return denied;
 
         return await _profiles.RemoveMedicationAsync(patientId, medicationId, ct)

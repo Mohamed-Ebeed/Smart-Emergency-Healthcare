@@ -9,7 +9,7 @@ namespace SmartEmergency.Domain.Entities
         public int AmbulanceId { get; set; }
         public int HospitalId { get; set; }
         public string VehicleNumber { get; set; } = default!;
-        public AmbulanceStatus AmbulanceStatus { get; set; } = default!;
+        public AmbulanceStatus AmbulanceStatus { get; set; } = AmbulanceStatus.Available;
         public Decimal? LastKnownLatitude { get; set; }
         public Decimal? LastKnownLongitude { get; set; }
 

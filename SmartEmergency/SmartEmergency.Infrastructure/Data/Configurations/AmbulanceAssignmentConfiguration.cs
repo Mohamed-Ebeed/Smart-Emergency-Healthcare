@@ -31,6 +31,21 @@ namespace SmartEmergency.Infrastructure.Data.Configurations
             builder.Property(x => x.AssignmentStatus)
                 .HasConversion<string>()
                 .HasMaxLength(50);
+
+            // Prevent multiple active assignments for the same ambulance
+            builder.HasIndex(x => x.AmbulanceId)
+                .IsUnique()
+                .HasFilter("[CompletedAt] IS NULL AND [AssignmentStatus] = 'Accepted'");
+
+            // Prevent multiple active assignments for the same paramedic
+            builder.HasIndex(x => x.ParamedicId)
+                .IsUnique()
+                .HasFilter("[CompletedAt] IS NULL AND [AssignmentStatus] = 'Accepted'");
+
+            // Prevent multiple active ambulance assignments for the same emergency request
+            builder.HasIndex(x => x.EmergencyRequestId)
+                .IsUnique()
+                .HasFilter("[CompletedAt] IS NULL AND [AssignmentStatus] = 'Accepted'");
         }
     }
 }
