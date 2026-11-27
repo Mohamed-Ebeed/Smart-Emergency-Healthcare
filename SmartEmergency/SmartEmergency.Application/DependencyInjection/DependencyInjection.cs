@@ -23,7 +23,12 @@ namespace SmartEmergency.Application.DependencyInjection
             services.AddScoped<IPatientService, PatientService>();
             services.AddScoped<IMedicalProfileService, MedicalProfileService>();
             services.AddScoped<IEmergencyRequestService, EmergencyRequestService>();
+            services.AddScoped<IEmergencyCoordinationService, EmergencyCoordinationService>();
             services.AddScoped<INotificationService, NotificationService>();
+
+            // Real time defaults (do nothing). The API overrides them with SignalR
+            services.AddScoped<IRealtimeNotifier, NoRealtimeNotifier>();
+            services.AddScoped<INotificationSender, NoNotificationSender>();
 
             // Hospitals :)
             services.AddScoped<IHospitalService, HospitalService>();
