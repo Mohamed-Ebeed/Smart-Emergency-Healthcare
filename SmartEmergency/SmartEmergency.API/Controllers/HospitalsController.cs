@@ -24,6 +24,10 @@ public class HospitalsController : ControllerBase
         Roles.Doctor + "," +
         Roles.Admin;
 
+    private const string ManagementRoles =
+        Roles.Operator + "," +
+        Roles.Admin;
+
     private readonly IHospitalService _hospitals;
     private readonly IDepartmentService _departments;
     private readonly IHospitalBedService _beds;
@@ -41,10 +45,27 @@ public class HospitalsController : ControllerBase
         _staff = staff;
     }
 
+    // Create Hospital
+    [HttpPost]
+    [Authorize(Roles = ManagementRoles)]
+    [ProducesResponseType(typeof(HospitalDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult<HospitalDto>> Create(
+        [FromBody] CreateHospitalDto dto,
+        CancellationToken ct)
+    {
+        var hospital = await _hospitals.CreateAsync(dto, ct);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { hospitalId = hospital.HospitalId },
+            hospital);
+    }
+
+    // Get All Hospitals
     [HttpGet]
-    [ProducesResponseType(
-        typeof(List<HospitalDto>),
-        StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<HospitalDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<HospitalDto>>> GetAll(
         [FromQuery] bool activeOnly = true,
         CancellationToken ct = default)
@@ -52,13 +73,10 @@ public class HospitalsController : ControllerBase
         return Ok(await _hospitals.GetAllAsync(activeOnly, ct));
     }
 
+    // Get Hospital By ID
     [HttpGet("{hospitalId:int}")]
-    [ProducesResponseType(
-        typeof(HospitalDto),
-        StatusCodes.Status200OK)]
-    [ProducesResponseType(
-        typeof(ProblemDetails),
-        StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(HospitalDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<HospitalDto>> GetById(
         int hospitalId,
         CancellationToken ct)
@@ -66,17 +84,60 @@ public class HospitalsController : ControllerBase
         return Ok(await GetHospitalOrThrowAsync(hospitalId, ct));
     }
 
+    // Update Hospital
+    [HttpPut("{hospitalId:int}")]
+    [Authorize(Roles = ManagementRoles)]
+    [ProducesResponseType(typeof(HospitalDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<HospitalDto>> Update(
+        int hospitalId,
+        [FromBody] UpdateHospitalDto dto,
+        CancellationToken ct)
+    {
+        var hospital = await _hospitals.UpdateAsync(
+            hospitalId,
+            dto,
+            ct);
+
+        if (hospital is null)
+            throw new KeyNotFoundException(
+                $"Hospital {hospitalId} was not found.");
+
+        return Ok(hospital);
+    }
+
+    // Activate / Deactivate Hospital
+    [HttpPatch("{hospitalId:int}/active")]
+    [Authorize(Roles = ManagementRoles)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> SetActive(
+        int hospitalId,
+        [FromBody] bool isActive,
+        CancellationToken ct)
+    {
+        var updated = await _hospitals.SetActiveAsync(
+            hospitalId,
+            isActive,
+            ct);
+
+        if (!updated)
+            throw new KeyNotFoundException(
+                $"Hospital {hospitalId} was not found.");
+
+        return NoContent();
+    }
+
+    // Get Hospital Departments
     [HttpGet("{hospitalId:int}/departments")]
     [Authorize(Roles = StaffRoles)]
-    [ProducesResponseType(
-        typeof(List<DepartmentDto>),
-        StatusCodes.Status200OK)]
-    [ProducesResponseType(
-        typeof(ProblemDetails),
-        StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(
-        typeof(ProblemDetails),
-        StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(List<DepartmentDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<DepartmentDto>>> GetDepartments(
         int hospitalId,
         [FromQuery] bool activeOnly = true,
@@ -91,17 +152,12 @@ public class HospitalsController : ControllerBase
             ct));
     }
 
+    // Get Hospital Beds
     [HttpGet("{hospitalId:int}/beds")]
     [Authorize(Roles = StaffRoles)]
-    [ProducesResponseType(
-        typeof(List<HospitalBedDto>),
-        StatusCodes.Status200OK)]
-    [ProducesResponseType(
-        typeof(ProblemDetails),
-        StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(
-        typeof(ProblemDetails),
-        StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(List<HospitalBedDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<HospitalBedDto>>> GetBeds(
         int hospitalId,
         [FromQuery] int? departmentId = null,
@@ -188,6 +244,7 @@ public class HospitalsController : ControllerBase
                ?? throw new UnauthorizedAccessException(
                    "User ID was not found.");
     }
+
     private async Task<HospitalDto> GetHospitalOrThrowAsync(
         int hospitalId,
         CancellationToken ct)

@@ -13,8 +13,7 @@ namespace SmartEmergency.Domain.Entities
         public string? AssignedByUserId { get; set; }
         public DateTime AssignedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
-        public AssignmentStatus AssignmentStatus { get; set; } = default!;
-
+        public AssignmentStatus AssignmentStatus { get; set; } = AssignmentStatus.Pending;
         public EmergencyRequest EmergencyRequest { get; set; } = default!;
         public Ambulance Ambulance { get; set; } = default!;
         public Paramedic Paramedic { get; set; } = default!;

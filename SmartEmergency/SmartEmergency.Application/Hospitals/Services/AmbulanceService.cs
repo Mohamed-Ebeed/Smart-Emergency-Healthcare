@@ -186,6 +186,10 @@ public class AmbulanceService : IAmbulanceService
             throw new InvalidOperationException(
                 "Invalid ambulance status.");
 
+        if (status == AmbulanceStatus.Busy)
+            throw new InvalidOperationException(
+                "Busy status can only be set through an ambulance assignment.");
+
         var ambulance = await _db.Ambulances
             .FirstOrDefaultAsync(
                 a => a.AmbulanceId == ambulanceId, ct);
@@ -196,11 +200,11 @@ public class AmbulanceService : IAmbulanceService
         var hasActiveAssignment =
             await HasActiveAssignmentAsync(ambulanceId, ct);
 
-        if (hasActiveAssignment &&
-            status != AmbulanceStatus.Busy)
+        if (hasActiveAssignment ||
+            ambulance.AmbulanceStatus == AmbulanceStatus.Busy)
         {
             throw new InvalidOperationException(
-                "Ambulance has an active assignment and cannot leave Busy status.");
+                "Ambulance is busy or has an active assignment. Its status cannot be changed manually.");
         }
 
         if (ambulance.AmbulanceStatus == status)

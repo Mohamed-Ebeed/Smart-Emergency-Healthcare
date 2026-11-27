@@ -43,11 +43,13 @@ public class AmbulancesController : ControllerBase
         CancellationToken ct = default)
     {
         if (await _hospitals.GetByIdAsync(hospitalId, ct) is null)
-            throw new KeyNotFoundException($"Hospital {hospitalId} was not found.");
+            throw new KeyNotFoundException(
+                $"Hospital {hospitalId} was not found.");
 
         await EnsureCanAccessHospitalAsync(hospitalId, ct);
 
-        var ambulances = await _ambulances.GetByHospitalAsync(hospitalId, ct);
+        var ambulances = await _ambulances.GetByHospitalAsync(
+            hospitalId, ct);
 
         if (availableOnly)
         {
@@ -67,9 +69,11 @@ public class AmbulancesController : ControllerBase
         int ambulanceId,
         CancellationToken ct)
     {
-        var ambulance = await GetAmbulanceOrThrowAsync(ambulanceId, ct);
+        var ambulance = await GetAmbulanceOrThrowAsync(
+            ambulanceId, ct);
 
-        await EnsureCanAccessHospitalAsync(ambulance.HospitalId, ct);
+        await EnsureCanAccessHospitalAsync(
+            ambulance.HospitalId, ct);
 
         return Ok(ambulance);
     }
@@ -85,20 +89,19 @@ public class AmbulancesController : ControllerBase
         [FromBody] ChangeAmbulanceStatusRequest body,
         CancellationToken ct)
     {
-        var ambulance = await GetAmbulanceOrThrowAsync(ambulanceId, ct);
+        var ambulance = await GetAmbulanceOrThrowAsync(
+            ambulanceId, ct);
 
-        await EnsureCanManageAmbulanceAsync(ambulance.HospitalId, ct);
+        await EnsureCanManageAmbulanceAsync(
+            ambulance.HospitalId, ct);
 
-        var changed = await _ambulances.ChangeStatusAsync(
+        await _ambulances.ChangeStatusAsync(
             ambulanceId,
-            body.Status,
+            body.Status!.Value,
             ct);
 
-        if (!changed)
-            throw new KeyNotFoundException(
-                $"Ambulance {ambulanceId} was not found.");
-
-        return Ok(await GetAmbulanceOrThrowAsync(ambulanceId, ct));
+        return Ok(await GetAmbulanceOrThrowAsync(
+            ambulanceId, ct));
     }
 
     private async Task EnsureCanAccessHospitalAsync(
@@ -109,9 +112,11 @@ public class AmbulancesController : ControllerBase
         var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (string.IsNullOrWhiteSpace(userId))
-            throw new UnauthorizedAccessException("User ID not found.");
+            throw new UnauthorizedAccessException(
+                "User ID not found.");
 
-        if (user.IsInRole(Roles.Admin) || user.IsInRole(Roles.Operator))
+        if (user.IsInRole(Roles.Admin) ||
+            user.IsInRole(Roles.Operator))
             return;
 
         if (user.IsInRole(Roles.HospitalStaff))
@@ -149,7 +154,8 @@ public class AmbulancesController : ControllerBase
         int hospitalId,
         CancellationToken ct)
     {
-        if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Operator))
+        if (User.IsInRole(Roles.Admin) ||
+            User.IsInRole(Roles.Operator))
             return;
 
         if (User.IsInRole(Roles.HospitalStaff))
@@ -177,5 +183,5 @@ public class ChangeAmbulanceStatusRequest
     [Required]
     [EnumDataType(typeof(AmbulanceStatus))]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public AmbulanceStatus Status { get; set; }
+    public AmbulanceStatus? Status { get; set; }
 }

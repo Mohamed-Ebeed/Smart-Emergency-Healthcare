@@ -210,7 +210,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             assignment.EmergencyHospitalAssignmentId, ct);
     }
 
-
     public async Task<HospitalAssignmentDto> RespondToHospitalAssignmentAsync(
         long assignmentId,
         HospitalResponseDto dto,
@@ -264,15 +263,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         assignment.RespondedAt = DateTime.UtcNow;
         assignment.ResponseNotes = dto.Notes?.Trim();
 
-        _db.CaseStatusHistories.Add(new CaseStatusHistory
-        {
-            EmergencyRequestId = assignment.EmergencyRequestId,
-            Status = assignment.EmergencyRequest.CurrentStatus,
-            ChangedByUserId = userId,
-            Notes = $"{assignment.Hospital.Name} {(accepted ? "accepted" : "rejected")} the request",
-            ChangedAt = DateTime.UtcNow
-        });
-
         await _db.SaveChangesAsync(ct);
 
         await _realtime.HospitalAssignmentChangedAsync(
@@ -284,7 +274,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
 
         return await GetHospitalAssignmentAsync(assignmentId, ct);
     }
-
 
     public async Task<List<HospitalAssignmentDto>> GetHospitalAssignmentsAsync(
         long requestId,
@@ -686,6 +675,8 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
                 allowed = await _db.AmbulanceAssignments.AnyAsync(
                     a => a.EmergencyRequestId == requestId &&
                          a.Paramedic.UserId == userId &&
+                         a.Paramedic.IsActive &&
+                         a.CompletedAt == null &&
                          a.AssignmentStatus == AssignmentStatus.Accepted,
                     ct);
                 break;
@@ -805,17 +796,17 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         string userId,
         string? notes)
     {
-        if (request.CurrentStatus != newStatus)
-        {
-            if (!RequestStatusTransitions.CanTransition(
-                request.CurrentStatus, newStatus))
-            {
-                throw new InvalidOperationException(
-                    $"Can't change status from {request.CurrentStatus} to {newStatus}.");
-            }
+        if (request.CurrentStatus == newStatus)
+            return;
 
-            request.CurrentStatus = newStatus;
+        if (!RequestStatusTransitions.CanTransition(
+            request.CurrentStatus, newStatus))
+        {
+            throw new InvalidOperationException(
+                $"Can't change status from {request.CurrentStatus} to {newStatus}.");
         }
+
+        request.CurrentStatus = newStatus;
 
         _db.CaseStatusHistories.Add(new CaseStatusHistory
         {

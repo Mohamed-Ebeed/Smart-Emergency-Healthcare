@@ -400,13 +400,19 @@ namespace SmartEmergency.Infrastructure.Data.Migrations
 
                     b.HasKey("AmbulanceAssignmentId");
 
-                    b.HasIndex("AmbulanceId");
+                    b.HasIndex("AmbulanceId")
+                        .IsUnique()
+                        .HasFilter("[CompletedAt] IS NULL AND [AssignmentStatus] = 'Accepted'");
 
                     b.HasIndex("AssignedByUserId");
 
-                    b.HasIndex("EmergencyRequestId");
+                    b.HasIndex("EmergencyRequestId")
+                        .IsUnique()
+                        .HasFilter("[CompletedAt] IS NULL AND [AssignmentStatus] = 'Accepted'");
 
-                    b.HasIndex("ParamedicId");
+                    b.HasIndex("ParamedicId")
+                        .IsUnique()
+                        .HasFilter("[CompletedAt] IS NULL AND [AssignmentStatus] = 'Accepted'");
 
                     b.ToTable("AmbulanceAssignments");
                 });
