@@ -115,7 +115,7 @@ public class EmergencyRequestsController : ControllerBase
 
     /// <summary>Change the status of an emergency request (staff roles only, valid transitions only).</summary>
     [HttpPost("{requestId:long}/status")]
-    [Authorize(Roles = Roles.Operator + "," + Roles.HospitalStaff + "," + Roles.Paramedic + "," + Roles.Admin)]
+    [Authorize(Roles = Roles.Operator + "," + Roles.Paramedic + "," + Roles.Admin)]
     [ProducesResponseType(typeof(EmergencyRequestDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -126,7 +126,16 @@ public class EmergencyRequestsController : ControllerBase
         // بنجيب الطلب الأول علشان لو مش موجود يرجّع 404 (الـ Service بيرجّع false في الحالتين)
         var current = await _requests.GetByIdAsync(requestId, ct);
 
-        var changed = await _requests.ChangeStatusAsync(requestId, body.NewStatus, GetUserId());
+        var userRole = User.FindFirstValue(ClaimTypes.Role)
+            ?? throw new UnauthorizedAccessException("User role was not found in the access token.");
+
+        var changed = await _requests.ChangeStatusAsync(
+            requestId,
+            body.NewStatus,
+            GetUserId(),
+            userRole,
+            ct);
+
         if (!changed)
             throw new InvalidOperationException(
                 $"Cannot change status from {current.CurrentStatus} to {body.NewStatus}.");
