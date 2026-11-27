@@ -2,8 +2,9 @@
 {
     public enum AssignmentStatus
     {
-        Pending, 
-        Accepted, 
-        Rejected
+        Pending,
+        Accepted,
+        Rejected,
+        Cancelled
     }
 }

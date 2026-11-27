@@ -20,13 +20,16 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
     {
         private readonly IAppDbContext _db;
         private readonly INotificationService _notificationService;
+        private readonly IRealtimeNotifier _realtime;
 
         public EmergencyRequestService(
             IAppDbContext db,
-            INotificationService notificationService)
+            INotificationService notificationService,
+            IRealtimeNotifier realtime)
         {
             _db = db;
             _notificationService = notificationService;
+            _realtime = realtime;
         }
 
         public async Task<EmergencyRequestDto> CreateAsync(
@@ -99,7 +102,8 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
                     cancellationToken);
 
             if (request == null)
-                throw new KeyNotFoundException("Emergency request not found.");
+                throw new KeyNotFoundException(
+                    "Emergency request not found.");
 
             return MapToDto(request);
         }
@@ -129,10 +133,9 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
                 throw new ArgumentException("UserId is required.");
 
             if (string.IsNullOrWhiteSpace(userRole))
-                throw new UnauthorizedAccessException("User role is required.");
+                throw new UnauthorizedAccessException(
+                    "User role is required.");
 
-            // Sending a request to a hospital must be done through
-            // EmergencyCoordinationService.SendToHospitalAsync.
             if (newStatus == RequestStatus.SentToHospital)
             {
                 throw new UnauthorizedAccessException(
@@ -148,14 +151,12 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
                 return false;
 
             if (!RequestStatusTransitions.CanTransition(
-                    request.CurrentStatus, newStatus))
+                request.CurrentStatus, newStatus))
                 return false;
 
             switch (userRole)
             {
                 case Roles.Admin:
-                    // Admin can perform any valid transition
-                    // except SentToHospital, which is handled separately.
                     break;
 
                 case Roles.Operator:
@@ -167,7 +168,7 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
                     if (!isAllowedOperatorTransition)
                     {
                         throw new UnauthorizedAccessException(
-                            "Operators can only confirm or invalidate submitted requests. Use the hospital assignment workflow to send requests to hospitals.");
+                            "Operators can only confirm or invalidate submitted requests.");
                     }
                     break;
 
@@ -196,6 +197,7 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
                             p.IsActive &&
                             p.AmbulanceAssignments.Any(a =>
                                 a.EmergencyRequestId == requestId &&
+                                a.CompletedAt == null &&
                                 a.AssignmentStatus == AssignmentStatus.Accepted),
                             cancellationToken);
 
@@ -217,13 +219,76 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
 
             UpdateStatus(request, newStatus, userId, null);
 
+            Ambulance? releasedAmbulance = null;
+
+            if (newStatus == RequestStatus.Completed)
+            {
+                releasedAmbulance = await CompleteAmbulanceAssignmentAsync(
+                    requestId,
+                    cancellationToken);
+            }
+
             await _db.SaveChangesAsync(cancellationToken);
 
             await _notificationService.NotifyEmergencyRequestStatusChangedAsync(
                 requestId,
                 cancellationToken);
 
+            await _realtime.RequestStatusChangedAsync(
+                requestId,
+                newStatus,
+                cancellationToken);
+
+            if (releasedAmbulance != null)
+            {
+                await _realtime.AmbulanceChangedAsync(
+                    releasedAmbulance.AmbulanceId,
+                    releasedAmbulance.HospitalId,
+                    releasedAmbulance.AmbulanceStatus,
+                    releasedAmbulance.LastKnownLatitude,
+                    releasedAmbulance.LastKnownLongitude,
+                    null,
+                    cancellationToken);
+            }
+
             return true;
+        }
+
+        private async Task<Ambulance?> CompleteAmbulanceAssignmentAsync(
+            long requestId,
+            CancellationToken ct)
+        {
+            var assignment = await _db.AmbulanceAssignments
+                .Include(a => a.Ambulance)
+                .Include(a => a.Paramedic)
+                .FirstOrDefaultAsync(a =>
+                    a.EmergencyRequestId == requestId &&
+                    a.CompletedAt == null &&
+                    a.AssignmentStatus == AssignmentStatus.Accepted,
+                    ct);
+
+            if (assignment == null)
+                return null;
+
+            var now = DateTime.UtcNow;
+
+            assignment.CompletedAt = now;
+
+            assignment.Ambulance.AmbulanceStatus =
+                AmbulanceStatus.Available;
+
+            assignment.Paramedic.IsAvailable = true;
+
+            _db.AmbulanceStatusHistories.Add(
+                new AmbulanceStatusHistory
+                {
+                    AmbulanceId = assignment.AmbulanceId,
+                    Status = AmbulanceStatus.Available,
+                    ChangedAt = now,
+                    Notes = $"Emergency request {requestId} completed"
+                });
+
+            return assignment.Ambulance;
         }
 
         public async Task CancelAsync(
@@ -241,7 +306,8 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
                     cancellationToken);
 
             if (request == null)
-                throw new KeyNotFoundException("Emergency request not found.");
+                throw new KeyNotFoundException(
+                    "Emergency request not found.");
 
             if (request.Patient.UserId != userId)
             {
@@ -249,9 +315,9 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
                     "Only the patient who owns the request can cancel it.");
             }
 
-            if (request.CurrentStatus != RequestStatus.Submitted
-                && request.CurrentStatus != RequestStatus.Confirmed
-                && request.CurrentStatus != RequestStatus.SentToHospital)
+            if (request.CurrentStatus != RequestStatus.Submitted &&
+                request.CurrentStatus != RequestStatus.Confirmed &&
+                request.CurrentStatus != RequestStatus.SentToHospital)
             {
                 throw new InvalidOperationException(
                     "The request can only be cancelled before an ambulance is assigned.");
@@ -263,11 +329,42 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
                 userId,
                 "Cancelled by patient");
 
+            var now = DateTime.UtcNow;
+
+            var openAssignments = await _db.EmergencyHospitalAssignments
+                .Where(a =>
+                    a.EmergencyRequestId == requestId &&
+                    (a.AssignmentStatus == AssignmentStatus.Pending ||
+                     a.AssignmentStatus == AssignmentStatus.Accepted))
+                .ToListAsync(cancellationToken);
+
+            foreach (var assignment in openAssignments)
+            {
+                assignment.AssignmentStatus = AssignmentStatus.Cancelled;
+                assignment.RespondedAt = now;
+                assignment.ResponseNotes = "Cancelled by patient";
+            }
+
             await _db.SaveChangesAsync(cancellationToken);
 
             await _notificationService.NotifyEmergencyRequestStatusChangedAsync(
                 requestId,
                 cancellationToken);
+
+            await _realtime.RequestStatusChangedAsync(
+                requestId,
+                RequestStatus.Cancelled,
+                cancellationToken);
+
+            foreach (var assignment in openAssignments)
+            {
+                await _realtime.HospitalAssignmentChangedAsync(
+                    assignment.HospitalId,
+                    requestId,
+                    assignment.EmergencyHospitalAssignmentId,
+                    AssignmentStatus.Cancelled,
+                    cancellationToken);
+            }
         }
 
         private void UpdateStatus(
@@ -288,9 +385,9 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
             {
                 request.ArrivedAtHospitalAt = now;
             }
-            else if (newStatus == RequestStatus.Completed
-                  || newStatus == RequestStatus.Cancelled
-                  || newStatus == RequestStatus.Invalid)
+            else if (newStatus == RequestStatus.Completed ||
+                     newStatus == RequestStatus.Cancelled ||
+                     newStatus == RequestStatus.Invalid)
             {
                 request.ClosedAt = now;
                 request.ClosedByUserId = userId;
@@ -338,29 +435,42 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
                 throw new ArgumentException("PatientId is required.");
 
             if (dto.EmergencyTypeId <= 0)
-                throw new ArgumentException("EmergencyTypeId is required.");
+                throw new ArgumentException(
+                    "EmergencyTypeId is required.");
 
-            if (dto.Description != null && dto.Description.Length > 1000)
+            if (dto.Description != null &&
+                dto.Description.Length > 1000)
+            {
                 throw new ArgumentException(
                     "Description cannot be more than 1000 characters.");
+            }
 
             if (dto.Latitude.HasValue != dto.Longitude.HasValue)
+            {
                 throw new ArgumentException(
                     "Latitude and Longitude must be sent together.");
+            }
 
             if (dto.Latitude.HasValue &&
                 (dto.Latitude < -90 || dto.Latitude > 90))
+            {
                 throw new ArgumentException(
                     "Latitude must be between -90 and 90.");
+            }
 
             if (dto.Longitude.HasValue &&
                 (dto.Longitude < -180 || dto.Longitude > 180))
+            {
                 throw new ArgumentException(
                     "Longitude must be between -180 and 180.");
+            }
 
-            if (dto.AddressText != null && dto.AddressText.Length > 500)
+            if (dto.AddressText != null &&
+                dto.AddressText.Length > 500)
+            {
                 throw new ArgumentException(
                     "AddressText cannot be more than 500 characters.");
+            }
         }
     }
 }

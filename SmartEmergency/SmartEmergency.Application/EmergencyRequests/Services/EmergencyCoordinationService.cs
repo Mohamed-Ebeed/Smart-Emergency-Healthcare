@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using SmartEmergency.Application.Common.Interfaces;
 using SmartEmergency.Application.Common.Models;
 using SmartEmergency.Application.EmergencyRequests.DTOs;
@@ -191,6 +192,11 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         {
             await _notifications.NotifyEmergencyRequestStatusChangedAsync(
                 requestId, ct);
+
+            await _realtime.RequestStatusChangedAsync(
+                requestId,
+                RequestStatus.SentToHospital,
+                ct);
         }
 
         await _realtime.HospitalAssignmentChangedAsync(
@@ -415,7 +421,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
                 "A hospital must accept the request before assigning an ambulance.");
         }
 
-        // Prevent assigning another ambulance to the same request.
         var requestHasActiveAssignment =
             await _db.AmbulanceAssignments.AnyAsync(a =>
                 a.EmergencyRequestId == requestId &&
@@ -445,7 +450,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
                 "Ambulance must belong to the hospital that accepted this request.");
         }
 
-        // Prevent using an ambulance that has another active assignment.
         var ambulanceHasActiveAssignment =
             await _db.AmbulanceAssignments.AnyAsync(a =>
                 a.AmbulanceId == ambulance.AmbulanceId &&
@@ -475,7 +479,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
                 "Paramedic and ambulance must belong to the same hospital.");
         }
 
-        // Prevent using a paramedic who has another active assignment.
         var paramedicHasActiveAssignment =
             await _db.AmbulanceAssignments.AnyAsync(a =>
                 a.ParamedicId == paramedic.ParamedicId &&
@@ -525,8 +528,14 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         await _notifications.NotifyEmergencyRequestStatusChangedAsync(
             requestId, ct);
 
+        await _realtime.RequestStatusChangedAsync(
+            requestId,
+            RequestStatus.AmbulanceAssigned,
+            ct);
+
         await _realtime.AmbulanceChangedAsync(
             ambulance.AmbulanceId,
+            ambulance.HospitalId,
             ambulance.AmbulanceStatus,
             ambulance.LastKnownLatitude,
             ambulance.LastKnownLongitude,
