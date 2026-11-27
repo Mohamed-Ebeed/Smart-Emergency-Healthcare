@@ -89,7 +89,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         };
     }
 
-    // Gets status history after checking the caller's access.
     public async Task<List<CaseStatusHistoryDto>> GetStatusHistoryAsync(
         long requestId,
         string userId,
@@ -113,7 +112,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             .ToListAsync(ct);
     }
 
-    // Operator sends the request to a hospital and waits for its answer.
     public async Task<HospitalAssignmentDto> SendToHospitalAsync(
         long requestId,
         SendToHospitalDto dto,
@@ -123,8 +121,10 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         ValidationHelper.Validate(dto);
 
         var request = await _db.EmergencyRequests
-            .FirstOrDefaultAsync(r => r.EmergencyRequestId == requestId, ct)
-            ?? throw new KeyNotFoundException("Emergency request not found.");
+            .FirstOrDefaultAsync(
+                r => r.EmergencyRequestId == requestId, ct)
+            ?? throw new KeyNotFoundException(
+                "Emergency request not found.");
 
         if (request.CurrentStatus != RequestStatus.Confirmed &&
             request.CurrentStatus != RequestStatus.SentToHospital)
@@ -135,13 +135,14 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
 
         var hospital = await _db.Hospitals
             .AsNoTracking()
-            .FirstOrDefaultAsync(h => h.HospitalId == dto.HospitalId, ct)
+            .FirstOrDefaultAsync(
+                h => h.HospitalId == dto.HospitalId, ct)
             ?? throw new KeyNotFoundException("Hospital not found.");
 
         if (!hospital.IsActive)
-            throw new InvalidOperationException("This hospital is not active.");
+            throw new InvalidOperationException(
+                "This hospital is not active.");
 
-        // One open assignment at a time (waiting or already accepted).
         var hasOpen = await _db.EmergencyHospitalAssignments.AnyAsync(a =>
             a.EmergencyRequestId == requestId &&
             (a.AssignmentStatus == AssignmentStatus.Pending ||
@@ -153,15 +154,16 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
                 "This request is already waiting for or accepted by a hospital.");
         }
 
-        // Don't send again to a hospital that already rejected it.
         var rejectedBefore = await _db.EmergencyHospitalAssignments.AnyAsync(a =>
             a.EmergencyRequestId == requestId &&
             a.HospitalId == dto.HospitalId &&
             a.AssignmentStatus == AssignmentStatus.Rejected, ct);
 
         if (rejectedBefore)
+        {
             throw new InvalidOperationException(
                 "This hospital already rejected the request.");
+        }
 
         var assignment = new EmergencyHospitalAssignment
         {
@@ -174,7 +176,8 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
 
         _db.EmergencyHospitalAssignments.Add(assignment);
 
-        var statusChanged = request.CurrentStatus != RequestStatus.SentToHospital;
+        var statusChanged =
+            request.CurrentStatus != RequestStatus.SentToHospital;
 
         AddStatusChange(
             request,
@@ -185,8 +188,10 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         await _db.SaveChangesAsync(ct);
 
         if (statusChanged)
+        {
             await _notifications.NotifyEmergencyRequestStatusChangedAsync(
                 requestId, ct);
+        }
 
         await _realtime.HospitalAssignmentChangedAsync(
             hospital.HospitalId,
@@ -199,7 +204,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             assignment.EmergencyHospitalAssignmentId, ct);
     }
 
-    // Hospital staff accept or reject a request sent to their hospital.
     public async Task<HospitalAssignmentDto> RespondToHospitalAssignmentAsync(
         long assignmentId,
         HospitalResponseDto dto,
@@ -214,9 +218,9 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             .Include(a => a.Hospital)
             .FirstOrDefaultAsync(
                 a => a.EmergencyHospitalAssignmentId == assignmentId, ct)
-            ?? throw new KeyNotFoundException("Hospital assignment not found.");
+            ?? throw new KeyNotFoundException(
+                "Hospital assignment not found.");
 
-        // Staff can only answer for their own hospital.
         if (!isAdmin)
         {
             var staffHospitalId = await _db.HospitalStaffs
@@ -232,8 +236,10 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         }
 
         if (assignment.AssignmentStatus != AssignmentStatus.Pending)
+        {
             throw new InvalidOperationException(
                 "This assignment was already answered.");
+        }
 
         if (RequestStatusTransitions.IsFinalStatus(
             assignment.EmergencyRequest.CurrentStatus))
@@ -251,7 +257,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         assignment.RespondedAt = DateTime.UtcNow;
         assignment.ResponseNotes = dto.Notes?.Trim();
 
-        // Keep the decision in the request timeline too.
         _db.CaseStatusHistories.Add(new CaseStatusHistory
         {
             EmergencyRequestId = assignment.EmergencyRequestId,
@@ -276,7 +281,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         return await GetHospitalAssignmentAsync(assignmentId, ct);
     }
 
-    // Gets hospital assignments after checking the caller's access.
     public async Task<List<HospitalAssignmentDto>> GetHospitalAssignmentsAsync(
         long requestId,
         string userId,
@@ -291,7 +295,8 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
 
         if (userRole == "HospitalStaff")
         {
-            var hospitalId = await GetHospitalStaffHospitalIdAsync(userId, ct);
+            var hospitalId =
+                await GetHospitalStaffHospitalIdAsync(userId, ct);
 
             query = query.Where(a => a.HospitalId == hospitalId);
         }
@@ -302,8 +307,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             .ToListAsync(ct);
     }
 
-    // Next hospital = active, not tried before for this request,
-    // hospitals with free beds first, then the nearest to the patient.
     public async Task<NextHospitalDto> GetNextHospitalAsync(
         long requestId,
         CancellationToken ct = default)
@@ -313,7 +316,8 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             .Where(r => r.EmergencyRequestId == requestId)
             .Select(r => new { r.Latitude, r.Longitude })
             .FirstOrDefaultAsync(ct)
-            ?? throw new KeyNotFoundException("Emergency request not found.");
+            ?? throw new KeyNotFoundException(
+                "Emergency request not found.");
 
         var triedHospitalIds = await _db.EmergencyHospitalAssignments
             .Where(a => a.EmergencyRequestId == requestId)
@@ -322,7 +326,8 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
 
         var candidates = await _db.Hospitals
             .AsNoTracking()
-            .Where(h => h.IsActive && !triedHospitalIds.Contains(h.HospitalId))
+            .Where(h => h.IsActive &&
+                        !triedHospitalIds.Contains(h.HospitalId))
             .Select(h => new
             {
                 h.HospitalId,
@@ -359,7 +364,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             "No other suitable hospital was found.");
     }
 
-    // Used after a rejection: pick the next hospital and send the request to it.
     public async Task<HospitalAssignmentDto> SendToNextHospitalAsync(
         long requestId,
         string operatorUserId,
@@ -369,12 +373,14 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
 
         return await SendToHospitalAsync(
             requestId,
-            new SendToHospitalDto { HospitalId = next.HospitalId },
+            new SendToHospitalDto
+            {
+                HospitalId = next.HospitalId
+            },
             operatorUserId,
             ct);
     }
 
-    // Operator sends an ambulance + paramedic after a hospital accepted the request.
     public async Task<AmbulanceAssignmentDto> AssignAmbulanceAsync(
         long requestId,
         AssignAmbulanceDto dto,
@@ -384,51 +390,102 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         ValidationHelper.Validate(dto);
 
         var request = await _db.EmergencyRequests
-            .FirstOrDefaultAsync(r => r.EmergencyRequestId == requestId, ct)
-            ?? throw new KeyNotFoundException("Emergency request not found.");
+            .FirstOrDefaultAsync(
+                r => r.EmergencyRequestId == requestId, ct)
+            ?? throw new KeyNotFoundException(
+                "Emergency request not found.");
 
-        // Get the hospital that accepted this request.
-        var acceptedHospitalId = await _db.EmergencyHospitalAssignments
-            .Where(a => a.EmergencyRequestId == requestId &&
-                        a.AssignmentStatus == AssignmentStatus.Accepted)
-            .Select(a => (int?)a.HospitalId)
-            .FirstOrDefaultAsync(ct);
-
-        if (request.CurrentStatus != RequestStatus.SentToHospital ||
-            acceptedHospitalId is null)
+        if (request.CurrentStatus != RequestStatus.SentToHospital)
         {
             throw new InvalidOperationException(
-                "An ambulance can be assigned only after a hospital accepts the request.");
+                "An ambulance can be assigned only when the request is sent to a hospital.");
+        }
+
+        var acceptedHospitalId =
+            await _db.EmergencyHospitalAssignments
+                .Where(a =>
+                    a.EmergencyRequestId == requestId &&
+                    a.AssignmentStatus == AssignmentStatus.Accepted)
+                .Select(a => (int?)a.HospitalId)
+                .FirstOrDefaultAsync(ct);
+
+        if (acceptedHospitalId is null)
+        {
+            throw new InvalidOperationException(
+                "A hospital must accept the request before assigning an ambulance.");
+        }
+
+        // Prevent assigning another ambulance to the same request.
+        var requestHasActiveAssignment =
+            await _db.AmbulanceAssignments.AnyAsync(a =>
+                a.EmergencyRequestId == requestId &&
+                a.CompletedAt == null &&
+                a.AssignmentStatus == AssignmentStatus.Accepted, ct);
+
+        if (requestHasActiveAssignment)
+        {
+            throw new InvalidOperationException(
+                "This emergency request already has an active ambulance assignment.");
         }
 
         var ambulance = await _db.Ambulances
-            .FirstOrDefaultAsync(a => a.AmbulanceId == dto.AmbulanceId, ct)
+            .FirstOrDefaultAsync(
+                a => a.AmbulanceId == dto.AmbulanceId, ct)
             ?? throw new KeyNotFoundException("Ambulance not found.");
 
         if (ambulance.AmbulanceStatus != AmbulanceStatus.Available)
+        {
             throw new InvalidOperationException(
                 "This ambulance is not available now.");
+        }
 
-        // Ambulance must belong to the hospital that accepted the request.
         if (ambulance.HospitalId != acceptedHospitalId.Value)
         {
             throw new InvalidOperationException(
                 "Ambulance must belong to the hospital that accepted this request.");
         }
 
+        // Prevent using an ambulance that has another active assignment.
+        var ambulanceHasActiveAssignment =
+            await _db.AmbulanceAssignments.AnyAsync(a =>
+                a.AmbulanceId == ambulance.AmbulanceId &&
+                a.CompletedAt == null &&
+                a.AssignmentStatus == AssignmentStatus.Accepted, ct);
+
+        if (ambulanceHasActiveAssignment)
+        {
+            throw new InvalidOperationException(
+                "This ambulance already has an active assignment.");
+        }
+
         var paramedic = await _db.Paramedics
-            .FirstOrDefaultAsync(p => p.ParamedicId == dto.ParamedicId, ct)
+            .FirstOrDefaultAsync(
+                p => p.ParamedicId == dto.ParamedicId, ct)
             ?? throw new KeyNotFoundException("Paramedic not found.");
 
         if (!paramedic.IsActive || !paramedic.IsAvailable)
+        {
             throw new InvalidOperationException(
                 "This paramedic is not available now.");
+        }
 
-        // Ambulance and paramedic come from the same hospital.
         if (paramedic.HospitalId != ambulance.HospitalId)
         {
             throw new InvalidOperationException(
                 "Paramedic and ambulance must belong to the same hospital.");
+        }
+
+        // Prevent using a paramedic who has another active assignment.
+        var paramedicHasActiveAssignment =
+            await _db.AmbulanceAssignments.AnyAsync(a =>
+                a.ParamedicId == paramedic.ParamedicId &&
+                a.CompletedAt == null &&
+                a.AssignmentStatus == AssignmentStatus.Accepted, ct);
+
+        if (paramedicHasActiveAssignment)
+        {
+            throw new InvalidOperationException(
+                "This paramedic already has an active assignment.");
         }
 
         var now = DateTime.UtcNow;
@@ -445,7 +502,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
 
         _db.AmbulanceAssignments.Add(assignment);
 
-        // Ambulance is busy and the paramedic is on a job now.
         ambulance.AmbulanceStatus = AmbulanceStatus.Busy;
 
         _db.AmbulanceStatusHistories.Add(new AmbulanceStatusHistory
@@ -484,7 +540,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             ct);
     }
 
-    // Gets ambulance assignments after checking the caller's access.
     public async Task<List<AmbulanceAssignmentDto>> GetAmbulanceAssignmentsAsync(
         long requestId,
         string userId,
@@ -503,9 +558,11 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         }
         else if (userRole == "HospitalStaff")
         {
-            var hospitalId = await GetHospitalStaffHospitalIdAsync(userId, ct);
+            var hospitalId =
+                await GetHospitalStaffHospitalIdAsync(userId, ct);
 
-            query = query.Where(a => a.Ambulance.HospitalId == hospitalId);
+            query = query.Where(
+                a => a.Ambulance.HospitalId == hospitalId);
         }
 
         return await query
@@ -514,7 +571,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             .ToListAsync(ct);
     }
 
-    // Gets one ambulance assignment after checking the caller's access.
     public async Task<AmbulanceAssignmentDto> GetAmbulanceAssignmentAsync(
         long assignmentId,
         string userId,
@@ -549,7 +605,8 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
 
         if (userRole == "HospitalStaff")
         {
-            var hospitalId = await GetHospitalStaffHospitalIdAsync(userId, ct);
+            var hospitalId =
+                await GetHospitalStaffHospitalIdAsync(userId, ct);
 
             if (assignment.HospitalId != hospitalId)
             {
@@ -565,7 +622,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             .FirstAsync(ct);
     }
 
-    // Assignments of the logged in paramedic, newest first.
     public async Task<List<AmbulanceAssignmentDto>> GetMyAmbulanceAssignmentsAsync(
         string paramedicUserId,
         CancellationToken ct = default) =>
@@ -576,24 +632,24 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             .Select(ToAmbulanceAssignmentDto)
             .ToListAsync(ct);
 
-    // Checks whether the user can access the emergency request.
-
     public async Task EnsureCanViewRequestAsync(
         long requestId,
         string userId,
         string userRole,
         CancellationToken ct = default)
     {
-        // First, make sure the emergency request exists for every role.
         var request = await _db.EmergencyRequests
             .AsNoTracking()
             .Where(r => r.EmergencyRequestId == requestId)
-            .Select(r => new { r.EmergencyRequestId, r.PatientId })
+            .Select(r => new
+            {
+                r.EmergencyRequestId,
+                r.PatientId
+            })
             .FirstOrDefaultAsync(ct)
             ?? throw new KeyNotFoundException(
                 "Emergency request not found.");
 
-        // Admin and Operator can view every existing emergency request.
         if (userRole == "Admin" || userRole == "Operator")
             return;
 
@@ -609,8 +665,8 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
                 break;
 
             case "HospitalStaff":
-                var hospitalId = await GetHospitalStaffHospitalIdAsync(
-                    userId, ct);
+                var hospitalId =
+                    await GetHospitalStaffHospitalIdAsync(userId, ct);
 
                 allowed = await _db.EmergencyHospitalAssignments.AnyAsync(
                     a => a.EmergencyRequestId == requestId &&
@@ -648,8 +704,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
         }
     }
 
-
-    // Gets the hospital ID of an active hospital staff member.
     private async Task<int> GetHospitalStaffHospitalIdAsync(
         string userId,
         CancellationToken ct)
@@ -662,49 +716,50 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
                 "No active hospital staff profile was found.");
     }
 
-    // Helpers.
-
     private static readonly System.Linq.Expressions.Expression<
-        Func<AmbulanceAssignment, AmbulanceAssignmentDto>> ToAmbulanceAssignmentDto =
-        a => new AmbulanceAssignmentDto
-        {
-            AmbulanceAssignmentId = a.AmbulanceAssignmentId,
-            EmergencyRequestId = a.EmergencyRequestId,
-            AmbulanceId = a.AmbulanceId,
-            VehicleNumber = a.Ambulance.VehicleNumber,
-            ParamedicId = a.ParamedicId,
-            ParamedicName = a.Paramedic.FullName,
-            AssignedByUserId = a.AssignedByUserId,
-            AssignmentStatus = a.AssignmentStatus,
-            AssignedAt = a.AssignedAt,
-            CompletedAt = a.CompletedAt
-        };
+        Func<AmbulanceAssignment, AmbulanceAssignmentDto>>
+        ToAmbulanceAssignmentDto =
+            a => new AmbulanceAssignmentDto
+            {
+                AmbulanceAssignmentId = a.AmbulanceAssignmentId,
+                EmergencyRequestId = a.EmergencyRequestId,
+                AmbulanceId = a.AmbulanceId,
+                VehicleNumber = a.Ambulance.VehicleNumber,
+                ParamedicId = a.ParamedicId,
+                ParamedicName = a.Paramedic.FullName,
+                AssignedByUserId = a.AssignedByUserId,
+                AssignmentStatus = a.AssignmentStatus,
+                AssignedAt = a.AssignedAt,
+                CompletedAt = a.CompletedAt
+            };
 
     private async Task<HospitalAssignmentDto> GetHospitalAssignmentAsync(
         long assignmentId,
         CancellationToken ct) =>
         await _db.EmergencyHospitalAssignments
             .AsNoTracking()
-            .Where(a => a.EmergencyHospitalAssignmentId == assignmentId)
+            .Where(a =>
+                a.EmergencyHospitalAssignmentId == assignmentId)
             .Select(ToHospitalAssignmentDto)
             .FirstAsync(ct);
 
     private static readonly System.Linq.Expressions.Expression<
-        Func<EmergencyHospitalAssignment, HospitalAssignmentDto>> ToHospitalAssignmentDto =
-        a => new HospitalAssignmentDto
-        {
-            EmergencyHospitalAssignmentId = a.EmergencyHospitalAssignmentId,
-            EmergencyRequestId = a.EmergencyRequestId,
-            HospitalId = a.HospitalId,
-            HospitalName = a.Hospital.Name,
-            AssignmentStatus = a.AssignmentStatus,
-            AssignedByOperatorId = a.AssignedByOperatorId,
-            AssignedAt = a.AssignedAt,
-            RespondedAt = a.RespondedAt,
-            ResponseNotes = a.ResponseNotes
-        };
+        Func<EmergencyHospitalAssignment, HospitalAssignmentDto>>
+        ToHospitalAssignmentDto =
+            a => new HospitalAssignmentDto
+            {
+                EmergencyHospitalAssignmentId =
+                    a.EmergencyHospitalAssignmentId,
+                EmergencyRequestId = a.EmergencyRequestId,
+                HospitalId = a.HospitalId,
+                HospitalName = a.Hospital.Name,
+                AssignmentStatus = a.AssignmentStatus,
+                AssignedByOperatorId = a.AssignedByOperatorId,
+                AssignedAt = a.AssignedAt,
+                RespondedAt = a.RespondedAt,
+                ResponseNotes = a.ResponseNotes
+            };
 
-    // Straight line distance between two points (Haversine).
     private static double? DistanceKm(
         decimal? lat1,
         decimal? lon1,
@@ -736,7 +791,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a)), 2);
     }
 
-    // Changes the request status (if needed) and writes a history row.
     private void AddStatusChange(
         EmergencyRequest request,
         RequestStatus newStatus,
