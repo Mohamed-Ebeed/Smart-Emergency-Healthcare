@@ -85,6 +85,11 @@ namespace SmartEmergency.Application.EmergencyRequests.Services
                 request.EmergencyRequestId,
                 cancellationToken);
 
+            await _realtime.RequestStatusChangedAsync(
+                request.EmergencyRequestId,
+                RequestStatus.Submitted,
+                cancellationToken);
+
             return await GetByIdAsync(
                 request.EmergencyRequestId,
                 cancellationToken);

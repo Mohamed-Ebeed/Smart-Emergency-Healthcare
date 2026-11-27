@@ -210,6 +210,7 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
             assignment.EmergencyHospitalAssignmentId, ct);
     }
 
+
     public async Task<HospitalAssignmentDto> RespondToHospitalAssignmentAsync(
         long assignmentId,
         HospitalResponseDto dto,
@@ -274,9 +275,6 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
 
         await _db.SaveChangesAsync(ct);
 
-        await _notifications.NotifyEmergencyRequestStatusChangedAsync(
-            assignment.EmergencyRequestId, ct);
-
         await _realtime.HospitalAssignmentChangedAsync(
             assignment.HospitalId,
             assignment.EmergencyRequestId,
@@ -286,6 +284,7 @@ public class EmergencyCoordinationService : IEmergencyCoordinationService
 
         return await GetHospitalAssignmentAsync(assignmentId, ct);
     }
+
 
     public async Task<List<HospitalAssignmentDto>> GetHospitalAssignmentsAsync(
         long requestId,
